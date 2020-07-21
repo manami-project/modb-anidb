@@ -119,7 +119,7 @@ class AnidbConverter(
         }
     }
 
-    private fun extractSynonyms(document: Document): MutableList<String> {
+    private fun extractSynonyms(document: Document): List<String> {
         val synonyms = mutableListOf<String>()
 
         val tableFromTitlesTab = document.select("div.titles").select("table")
@@ -136,19 +136,19 @@ class AnidbConverter(
             ?.map { it.trim() }
             ?.forEach { synonyms.add(it) }
 
-        return synonyms.distinct().toMutableList()
+        return synonyms.distinct()
     }
 
-    private fun extractSourcesEntry(document: Document): MutableList<URL> {
+    private fun extractSourcesEntry(document: Document): List<URL> {
         val hrefValue= document.select("link[property=og:url]").attr("href")?.trim()
 
         check(hrefValue != null) { "Sources link must not be null" }
         check(hrefValue.isNotBlank()) { "Sources link must not be blank" }
 
-        return mutableListOf(URL(hrefValue))
+        return listOf(URL(hrefValue))
     }
 
-    private fun extractRelatedAnime(document: Document): MutableList<URL> {
+    private fun extractRelatedAnime(document: Document): List<URL> {
         val linkElements = document.select("div#tab_main_1_1_pane[class=pane directly_related]")
             ?.select("a")
             ?.select("a:has(picture)")
@@ -159,7 +159,7 @@ class AnidbConverter(
             .map { it.replace("/anime/", EMPTY) }
             .distinct()
             .map { config.buildAnimeLinkUrl(it) }
-            .toMutableList()
+            .toList()
     }
 
     private fun extractStatus(document: Document): Status {
@@ -328,9 +328,7 @@ class AnidbConverter(
         )
     }
 
-    private fun extractTags(document: Document): MutableList<String> {
-        return document.select("span[itemprop=genre]").map { it.text() }.toMutableList()
-    }
+    private fun extractTags(document: Document): List<String> = document.select("span[itemprop=genre]").map { it.text() }
 
     companion object {
         private val NO_PIC = URL("https://cdn.myanimelist.net/images/qm_50.gif")
