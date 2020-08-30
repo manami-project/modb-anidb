@@ -34,8 +34,8 @@ class AnidbConverter(
     private val currentMonth = LocalDate.now(clock).monthValue
     private val currentYear = LocalDate.now(clock).year
 
-    override fun convert(source: String): Anime {
-        val document = Jsoup.parse(source)
+    override fun convert(rawContent: String): Anime {
+        val document = Jsoup.parse(rawContent)
 
         val picture = extractPicture(document)
 
