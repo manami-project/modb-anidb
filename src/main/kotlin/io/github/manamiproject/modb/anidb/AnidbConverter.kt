@@ -315,9 +315,9 @@ class AnidbConverter(
         val year = Regex("\\d{4}").find(cellTextContainingYear)?.value?.toInt() ?: 0
 
         val season = when(month) {
-            1,2,3 -> WINTER
-            4,5,6 -> SPRING
-            7,8,9 -> SUMMER
+            1, 2, 3 -> WINTER
+            4, 5, 6 -> SPRING
+            7, 8, 9 -> SUMMER
             10, 11, 12 -> FALL
             else -> UNDEFINED
         }
