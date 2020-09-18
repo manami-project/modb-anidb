@@ -8,7 +8,7 @@ import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
  * Configuration for downloading and converting anime data from anidb.net
  * @since 1.0.0
  */
-object AnidbConfig : MetaDataProviderConfig {
+public object AnidbConfig : MetaDataProviderConfig {
 
     override fun hostname(): Hostname = "anidb.net"
 

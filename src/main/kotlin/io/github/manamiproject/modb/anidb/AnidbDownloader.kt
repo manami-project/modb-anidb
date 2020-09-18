@@ -19,7 +19,7 @@ import java.net.URL
  * @param config Configuration for downloading data.
  * @param httpClient To actually download the anime data.
  */
-class AnidbDownloader(
+public class AnidbDownloader(
     private val config: MetaDataProviderConfig,
     private val httpClient: HttpClient = DefaultHttpClient()
 ) : Downloader {
@@ -70,7 +70,7 @@ class AnidbDownloader(
         }
     }
 
-    companion object {
+    private companion object {
         private val log by LoggerDelegate()
     }
 }

@@ -25,7 +25,7 @@ import java.time.LocalDate
  * @param config Configuration for converting data.
  * @param clock Used to determine the current date. **Default:** `Clock.systemDefaultZone()`
  */
-class AnidbConverter(
+public class AnidbConverter(
     private val config: MetaDataProviderConfig = AnidbConfig,
     clock: Clock = Clock.systemDefaultZone()
 ) : AnimeConverter {
@@ -330,7 +330,7 @@ class AnidbConverter(
 
     private fun extractTags(document: Document): List<String> = document.select("span[itemprop=genre]").map { it.text() }
 
-    companion object {
+    private companion object {
         private val NO_PIC = URL("https://cdn.myanimelist.net/images/qm_50.gif")
         private const val EU_CDN = "https://cdn-eu.anidb.net"
         private const val US_CDN = "https://cdn-us.anidb.net"
