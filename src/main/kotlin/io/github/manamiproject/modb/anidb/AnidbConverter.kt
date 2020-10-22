@@ -128,11 +128,11 @@ public class AnidbConverter(
             .map { it.trim() }
             .forEach { synonyms.add(it) }
 
-        tableFromTitlesTab.select("tr.synonyms > td")?.text()?.trim()?.split(", ")
+        tableFromTitlesTab.select("tr.syn > td")?.text()?.trim()?.split(", ")
             ?.map { it.trim() }
             ?.forEach { synonyms.add(it) }
 
-        tableFromTitlesTab.select("tr.shortnames > td")?.text()?.trim()?.split(", ")
+        tableFromTitlesTab.select("tr.short > td")?.text()?.trim()?.split(", ")
             ?.map { it.trim() }
             ?.forEach { synonyms.add(it) }
 
