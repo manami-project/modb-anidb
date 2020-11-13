@@ -2,7 +2,7 @@ package io.github.manamiproject.modb.anidb
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.net.URL
+import java.net.URI
 
 internal class AnidbConfigTest {
 
@@ -25,27 +25,27 @@ internal class AnidbConfigTest {
     }
 
     @Test
-    fun `build anime link URL correctly`() {
+    fun `build anime link correctly`() {
         // given
         val id = "4563"
 
         // when
-        val result = AnidbConfig.buildAnimeLinkUrl(id)
+        val result = AnidbConfig.buildAnimeLink(id)
 
         // then
-        assertThat(result).isEqualTo(URL("https://anidb.net/anime/$id"))
+        assertThat(result).isEqualTo(URI("https://anidb.net/anime/$id"))
     }
 
     @Test
-    fun `build data download URL correctly`() {
+    fun `build data download link correctly`() {
         // given
         val id = "1535"
 
         // when
-        val result = AnidbConfig.buildDataDownloadUrl(id)
+        val result = AnidbConfig.buildDataDownloadLink(id)
 
         // then
-        assertThat(result).isEqualTo(URL("https://anidb.net/anime/$id"))
+        assertThat(result).isEqualTo(URI("https://anidb.net/anime/$id"))
     }
 
     @Test

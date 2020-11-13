@@ -15,7 +15,7 @@ import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.net.URL
+import java.net.URI
 
 internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireMockServerCreator() {
 
@@ -26,8 +26,8 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
             override fun hostname(): Hostname = "localhost"
-            override fun buildAnimeLinkUrl(id: AnimeId): URL = AnidbConfig.buildAnimeLinkUrl(id)
-            override fun buildDataDownloadUrl(id: String): URL = URL("http://${hostname()}:$port/anime/$id")
+            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+            override fun buildDataDownloadLink(id: String): URI = URI("http://${hostname()}:$port/anime/$id")
             override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
         }
 
@@ -58,8 +58,8 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
             override fun hostname(): Hostname = "localhost"
-            override fun buildAnimeLinkUrl(id: AnimeId): URL = AnidbConfig.buildAnimeLinkUrl(id)
-            override fun buildDataDownloadUrl(id: String): URL = URL("http://${hostname()}:$port/anime/$id")
+            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+            override fun buildDataDownloadLink(id: String): URI = URI("http://${hostname()}:$port/anime/$id")
             override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
         }
 
@@ -92,8 +92,8 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
             override fun hostname(): Hostname = "localhost"
-            override fun buildAnimeLinkUrl(id: AnimeId): URL = AnidbConfig.buildAnimeLinkUrl(id)
-            override fun buildDataDownloadUrl(id: String): URL = URL("http://${hostname()}:$port/anime/$id")
+            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+            override fun buildDataDownloadLink(id: String): URI = URI("http://${hostname()}:$port/anime/$id")
             override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
         }
 
@@ -125,8 +125,8 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
             override fun hostname(): Hostname = "localhost"
-            override fun buildAnimeLinkUrl(id: AnimeId): URL = AnidbConfig.buildAnimeLinkUrl(id)
-            override fun buildDataDownloadUrl(id: String): URL = URL("http://${hostname()}:$port/anime/$id")
+            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+            override fun buildDataDownloadLink(id: String): URI = URI("http://${hostname()}:$port/anime/$id")
             override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
         }
 
@@ -161,8 +161,8 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
             override fun hostname(): Hostname = "localhost"
-            override fun buildAnimeLinkUrl(id: AnimeId): URL = AnidbConfig.buildAnimeLinkUrl(id)
-            override fun buildDataDownloadUrl(id: String): URL = URL("http://${hostname()}:$port/anime/$id")
+            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+            override fun buildDataDownloadLink(id: String): URI = URI("http://${hostname()}:$port/anime/$id")
             override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
         }
 
@@ -197,8 +197,8 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
             override fun hostname(): Hostname = "localhost"
-            override fun buildAnimeLinkUrl(id: AnimeId): URL = AnidbConfig.buildAnimeLinkUrl(id)
-            override fun buildDataDownloadUrl(id: String): URL = URL("http://${hostname()}:$port/anime/$id")
+            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+            override fun buildDataDownloadLink(id: String): URI = URI("http://${hostname()}:$port/anime/$id")
             override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
         }
 
@@ -232,8 +232,8 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
             override fun hostname(): Hostname = "localhost"
-            override fun buildAnimeLinkUrl(id: AnimeId): URL = AnidbConfig.buildAnimeLinkUrl(id)
-            override fun buildDataDownloadUrl(id: String): URL = URL("http://${hostname()}:$port/anime/$id")
+            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+            override fun buildDataDownloadLink(id: String): URI = URI("http://${hostname()}:$port/anime/$id")
             override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
         }
 
@@ -264,8 +264,8 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         val testAnidbConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
             override fun hostname(): Hostname = "localhost"
-            override fun buildAnimeLinkUrl(id: AnimeId): URL = AnidbConfig.buildAnimeLinkUrl(id)
-            override fun buildDataDownloadUrl(id: String): URL = URL("http://${hostname()}:$port/anime/$id")
+            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+            override fun buildDataDownloadLink(id: String): URI = URI("http://${hostname()}:$port/anime/$id")
             override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
         }
 

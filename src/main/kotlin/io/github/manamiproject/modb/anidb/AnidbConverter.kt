@@ -3,19 +3,17 @@ package io.github.manamiproject.modb.anidb
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.extensions.EMPTY
-import io.github.manamiproject.modb.core.models.Anime
+import io.github.manamiproject.modb.core.models.*
 import io.github.manamiproject.modb.core.models.Anime.Status
 import io.github.manamiproject.modb.core.models.Anime.Status.*
 import io.github.manamiproject.modb.core.models.Anime.Type
 import io.github.manamiproject.modb.core.models.Anime.Type.*
-import io.github.manamiproject.modb.core.models.AnimeSeason
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
-import io.github.manamiproject.modb.core.models.Duration
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.MINUTES
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-import java.net.URL
+import java.net.URI
 import java.time.Clock
 import java.time.LocalDate
 
@@ -95,31 +93,31 @@ public class AnidbConverter(
         }
     }
 
-    private fun extractPicture(document: Document): URL {
+    private fun extractPicture(document: Document): URI {
         val src = document.select("img[itemprop=image]").attr("src").trim()
 
         return if (src.isNotBlank()) {
-            val url = when {
+            val uri = when {
                 src.startsWith(EU_CDN) -> src.replace(EU_CDN, CDN)
                 src.startsWith(US_CDN) -> src.replace(US_CDN, CDN)
                 else -> src
             }
 
-            URL(url)
+            URI(uri)
         } else {
             NO_PIC
         }
     }
 
-    private fun extractThumbnail(picture: URL): URL {
+    private fun extractThumbnail(picture: URI): URI {
         return if (picture == NO_PIC) {
             NO_PIC
         } else {
-            URL("$picture-thumb.jpg")
+            URI("$picture-thumb.jpg")
         }
     }
 
-    private fun extractSynonyms(document: Document): List<String> {
+    private fun extractSynonyms(document: Document): List<Title> {
         val synonyms = mutableListOf<String>()
 
         val tableFromTitlesTab = document.select("div.titles").select("table")
@@ -139,16 +137,16 @@ public class AnidbConverter(
         return synonyms.distinct()
     }
 
-    private fun extractSourcesEntry(document: Document): List<URL> {
+    private fun extractSourcesEntry(document: Document): List<URI> {
         val hrefValue= document.select("link[property=og:url]").attr("href")?.trim()
 
         check(hrefValue != null) { "Sources link must not be null" }
         check(hrefValue.isNotBlank()) { "Sources link must not be blank" }
 
-        return listOf(URL(hrefValue))
+        return listOf(URI(hrefValue))
     }
 
-    private fun extractRelatedAnime(document: Document): List<URL> {
+    private fun extractRelatedAnime(document: Document): List<URI> {
         val linkElements = document.select("div#tab_main_1_1_pane[class=pane directly_related]")
             ?.select("a")
             ?.select("a:has(picture)")
@@ -158,7 +156,7 @@ public class AnidbConverter(
             .map { it.attr("href") }
             .map { it.replace("/anime/", EMPTY) }
             .distinct()
-            .map { config.buildAnimeLinkUrl(it) }
+            .map { config.buildAnimeLink(it) }
             .toList()
     }
 
@@ -328,10 +326,10 @@ public class AnidbConverter(
         )
     }
 
-    private fun extractTags(document: Document): List<String> = document.select("span[itemprop=genre]").map { it.text() }
+    private fun extractTags(document: Document): List<Tag> = document.select("span[itemprop=genre]").map { it.text() }
 
     private companion object {
-        private val NO_PIC = URL("https://cdn.myanimelist.net/images/qm_50.gif")
+        private val NO_PIC = URI("https://cdn.myanimelist.net/images/qm_50.gif")
         private const val EU_CDN = "https://cdn-eu.anidb.net"
         private const val US_CDN = "https://cdn-us.anidb.net"
         private const val CDN = "https://cdn.anidb.net"

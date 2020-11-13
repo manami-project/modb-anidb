@@ -25,7 +25,7 @@ public class AnidbDownloader(
 ) : Downloader {
 
     override fun download(id: AnimeId, onDeadEntry: (AnimeId) -> Unit): String {
-        val response = httpClient.get(config.buildDataDownloadUrl(id))
+        val response = httpClient.get(config.buildDataDownloadLink(id).toURL())
 
         check(response.body.isNotBlank()) { "Response body was blank for [anidbId=$id] with response code [${response.code}]" }
 
