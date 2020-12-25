@@ -322,7 +322,7 @@ public class AnidbConverter(
 
         return AnimeSeason(
             season = season,
-            _year = year
+            year = year
         )
     }
 
