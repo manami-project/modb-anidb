@@ -65,8 +65,7 @@ public class AnidbDownloader(
 
     private fun checkIfCrawlerIsDetected(document: Document) {
         if (document.select("title")?.text() == "AniDB AntiLeech - AniDB") {
-            excludeFromTestContext(config) { Desktop.getDesktop().browse(URL("https://${config.hostname()}").toURI()) }
-            throw RuntimeException("Crawler has been detected")
+            throw CrawlerDetectedException
         }
     }
 
