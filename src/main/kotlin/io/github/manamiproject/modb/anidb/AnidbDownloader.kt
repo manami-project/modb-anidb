@@ -29,25 +29,22 @@ public class AnidbDownloader(
 
         check(response.body.isNotBlank()) { "Response body was blank for [anidbId=$id] with response code [${response.code}]" }
 
-        val responseChecker = AnidbResponseChecker(response.body)
-
-        responseChecker.checkIfCrawlerIsDetected()
-
-        if (responseChecker.isHentai || responseChecker.isRemovedFromAnidb) {
-            log.info("Add [anidbId={}] to dead-entries list", id)
-            onDeadEntry.invoke(id)
-            return EMPTY
+        val responseChecker = AnidbResponseChecker(response.body).apply {
+            checkIfCrawlerIsDetected()
         }
 
-        return when (response.code) {
-            200 -> {
-                if (responseChecker.isAdditionPending) {
-                    EMPTY
-                } else {
-                    response.body
-                }
+        if (!response.isOk()) {
+            throw IllegalStateException("Unable to determine the correct case for [anidbId=$id], [responseCode=${response.code}]")
+        }
+
+        return when {
+            responseChecker.isHentai || responseChecker.isRemovedFromAnidb -> {
+                log.info("Add [anidbId={}] to dead-entries list", id)
+                onDeadEntry.invoke(id)
+                EMPTY
             }
-            else -> throw IllegalStateException("Unable to determine the correct case for [anidbId=$id], [responseCode=${response.code}]")
+            responseChecker.isAdditionPending -> EMPTY
+            else -> response.body
         }
     }
 
