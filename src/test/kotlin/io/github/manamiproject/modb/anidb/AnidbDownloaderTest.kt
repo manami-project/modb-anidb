@@ -166,7 +166,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
             override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
         }
 
-        val responseBody = loadTestResource("downloader_tests/hentai.html")
+        val responseBody = loadTestResource("downloader_tests/deleted_entry.html")
 
         serverInstance.stubFor(
             get(urlPathEqualTo("/anime/$id")).willReturn(
