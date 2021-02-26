@@ -29,11 +29,11 @@ public class AnidbDownloader(
 
         check(response.body.isNotBlank()) { "Response body was blank for [anidbId=$id] with response code [${response.code}]" }
 
-        val document = Jsoup.parse(response.body)
+        val responseChecker = AnidbResponseChecker(response.body)
 
-        checkIfCrawlerIsDetected(document)
+        responseChecker.checkIfCrawlerIsDetected()
 
-        if (isHentai(document) || isRemovedFromAnidb(document)) {
+        if (responseChecker.isHentai || responseChecker.isRemovedFromAnidb) {
             log.info("Add [anidbId={}] to dead-entries list", id)
             onDeadEntry.invoke(id)
             return EMPTY
@@ -41,31 +41,13 @@ public class AnidbDownloader(
 
         return when (response.code) {
             200 -> {
-                if (isAdditionPending(document)) {
+                if (responseChecker.isAdditionPending) {
                     EMPTY
                 } else {
                     response.body
                 }
             }
             else -> throw IllegalStateException("Unable to determine the correct case for [anidbId=$id], [responseCode=${response.code}]")
-        }
-    }
-
-    private fun isAdditionPending(document: Document): Boolean {
-        return document.select("div#layout-content")?.select("div.container")?.text()?.startsWith("A request for the addition of this title to AniDB is currently") ?: false
-    }
-
-    private fun isHentai(document: Document): Boolean {
-        return document.select("div#layout-content")?.select("div.container")?.text()?.startsWith("This anime is marked as 18+ restricted") ?: false
-    }
-
-    private fun isRemovedFromAnidb(document: Document): Boolean {
-        return document.select("div#layout-content")?.select("div.container")?.text()?.startsWith("Unknown anime id.") ?: false
-    }
-
-    private fun checkIfCrawlerIsDetected(document: Document) {
-        if (document.select("title")?.text() == "AniDB AntiLeech - AniDB") {
-            throw CrawlerDetectedException
         }
     }
 
