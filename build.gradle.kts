@@ -20,7 +20,7 @@ repositories {
 }
 
 group = "io.github.manamiproject"
-version = project.findProperty("releaseVersion") as String? ?: ""
+version = project.findProperty("release.version") as String? ?: ""
 
 dependencies {
     api("io.github.manamiproject:modb-core:4.0.0")
