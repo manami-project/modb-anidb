@@ -172,7 +172,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
             get(urlPathEqualTo("/anime/$id")).willReturn(
                 aResponse()
                     .withHeader("Content-Type", "text/html")
-                    .withStatus(200)
+                    .withStatus(404)
                     .withBody(responseBody)
             )
         )

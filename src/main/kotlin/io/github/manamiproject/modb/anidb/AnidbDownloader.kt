@@ -33,7 +33,7 @@ public class AnidbDownloader(
             checkIfCrawlerIsDetected()
         }
 
-        if (!response.isOk()) {
+        if (!response.isOk() && response.code != 404) {
             throw IllegalStateException("Unable to determine the correct case for [anidbId=$id], [responseCode=${response.code}]")
         }
 
