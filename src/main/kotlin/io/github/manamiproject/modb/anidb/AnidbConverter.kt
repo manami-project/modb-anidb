@@ -65,7 +65,7 @@ public class AnidbConverter(
 
         val typeCell = document.select("tr.type > td.value")?.text()?.trim()
 
-        return if (typeCell != null && typeCell.toLowerCase().contains("unknown number of episodes")) {
+        return if (typeCell != null && typeCell.lowercase().contains("unknown number of episodes")) {
             0
         } else {
             1
@@ -80,7 +80,7 @@ public class AnidbConverter(
             typeCellContent.trim()
         }
 
-        return when(type.toLowerCase()) {
+        return when(type.lowercase()) {
             "movie" -> Movie
             "ova" -> OVA
             "web" -> ONA
