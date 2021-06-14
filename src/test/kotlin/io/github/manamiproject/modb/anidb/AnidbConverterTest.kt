@@ -3,6 +3,7 @@ package io.github.manamiproject.modb.anidb
 import io.github.manamiproject.modb.core.config.AnimeId
 import io.github.manamiproject.modb.core.config.FileSuffix
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
+import io.github.manamiproject.modb.core.models.Anime
 import io.github.manamiproject.modb.core.models.Anime.Status.*
 import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
@@ -187,7 +188,7 @@ internal class AnidbConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.type).isEqualTo(Movie)
+            assertThat(result.type).isEqualTo(MOVIE)
         }
 
         @Test
@@ -207,7 +208,7 @@ internal class AnidbConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.type).isEqualTo(Special)
+            assertThat(result.type).isEqualTo(SPECIAL)
         }
 
         @Test
@@ -227,7 +228,7 @@ internal class AnidbConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.type).isEqualTo(Special)
+            assertThat(result.type).isEqualTo(SPECIAL)
         }
 
         @Test
@@ -287,11 +288,11 @@ internal class AnidbConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.type).isEqualTo(Special)
+            assertThat(result.type).isEqualTo(SPECIAL)
         }
 
         @Test
-        fun `type 'Unknown' is mapped to 'TV'`() {
+        fun `type 'Unknown' is mapped to 'UNKNOWN'`() {
             // given
             val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
                 override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
@@ -307,7 +308,7 @@ internal class AnidbConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.type).isEqualTo(TV)
+            assertThat(result.type).isEqualTo(Anime.Type.UNKNOWN)
         }
 
         @Test
@@ -851,7 +852,7 @@ internal class AnidbConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.status).isEqualTo(CURRENTLY)
+            assertThat(result.status).isEqualTo(ONGOING)
         }
 
         @Test
@@ -871,7 +872,7 @@ internal class AnidbConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.status).isEqualTo(CURRENTLY)
+            assertThat(result.status).isEqualTo(ONGOING)
         }
 
         @Test
@@ -891,7 +892,7 @@ internal class AnidbConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.status).isEqualTo(CURRENTLY)
+            assertThat(result.status).isEqualTo(ONGOING)
         }
 
         @Test
@@ -911,7 +912,7 @@ internal class AnidbConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.status).isEqualTo(CURRENTLY)
+            assertThat(result.status).isEqualTo(ONGOING)
         }
 
         @Test
@@ -931,7 +932,7 @@ internal class AnidbConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.status).isEqualTo(UNKNOWN)
+            assertThat(result.status).isEqualTo(Anime.Status.UNKNOWN)
         }
     }
 

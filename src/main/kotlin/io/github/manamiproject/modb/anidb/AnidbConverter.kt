@@ -8,6 +8,7 @@ import io.github.manamiproject.modb.core.models.Anime.Status
 import io.github.manamiproject.modb.core.models.Anime.Status.*
 import io.github.manamiproject.modb.core.models.Anime.Type
 import io.github.manamiproject.modb.core.models.Anime.Type.*
+import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.MINUTES
 import org.jsoup.Jsoup
@@ -81,14 +82,14 @@ public class AnidbConverter(
         }
 
         return when(type.lowercase()) {
-            "movie" -> Movie
+            "movie" -> MOVIE
             "ova" -> OVA
             "web" -> ONA
-            "tv special" -> Special
-            "music video" -> Special
-            "other" -> Special
+            "tv special" -> SPECIAL
+            "music video" -> SPECIAL
+            "other" -> SPECIAL
             "tv series" -> TV
-            "unknown" -> TV
+            "unknown" -> UNKNOWN
             else -> throw IllegalStateException("Unknown type [$type]")
         }
     }
@@ -218,7 +219,7 @@ public class AnidbConverter(
             return when {
                 hasEnded -> FINISHED
                 !hasStarted -> UPCOMING
-                hasStarted && !hasEnded -> CURRENTLY
+                hasStarted && !hasEnded -> ONGOING
                 else -> throw IllegalStateException("Unable to determine correct case for [startdate=$startDate, endDate=$endDate]")
             }
         }
@@ -238,7 +239,7 @@ public class AnidbConverter(
 
         if (pureText.isNotBlank()) {
             return when {
-                pureText == "?" -> UNKNOWN
+                pureText == "?" -> Status.UNKNOWN
                 Regex(".{2}\\..{2}\\..{4}").containsMatchIn(pureText) -> {
                     val splitPureText = pureText.split('.')
                     mapStatusToSimpleReleaseDate(
@@ -270,7 +271,7 @@ public class AnidbConverter(
                             day == "??" -> UPCOMING
                             day.toInt() > currentDay -> UPCOMING
                             day.toInt() < currentDay -> FINISHED
-                            day.toInt() == currentDay -> CURRENTLY
+                            day.toInt() == currentDay -> ONGOING
                             else -> throw IllegalStateException(exceptionMessage)
                         }
                     }
