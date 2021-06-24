@@ -238,10 +238,11 @@ public class AnidbConverter(
         val pureText = releaseCell.text().trim()
 
         if (pureText.isNotBlank()) {
+            val dateFormatRegex = Regex(".{2}\\..{2}\\..{4}")
             return when {
                 pureText == "?" -> Status.UNKNOWN
-                Regex(".{2}\\..{2}\\..{4}").containsMatchIn(pureText) -> {
-                    val splitPureText = pureText.split('.')
+                dateFormatRegex.containsMatchIn(pureText) -> {
+                    val splitPureText = dateFormatRegex.find(pureText)!!.value.split('.')
                     mapStatusToSimpleReleaseDate(
                         day = splitPureText[DAY_ELEMENT],
                         month = splitPureText[MONTH_ELEMENT],

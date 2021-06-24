@@ -1170,7 +1170,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/anime_season/2017-10-03_-_unknown.html")
+                val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2017-10-03_-_unknown.html")
 
                 val converter = AnidbConverter(testAnidbConfig)
 
@@ -1190,7 +1190,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/anime_season/2019-07-07_-_2019-09-22.html")
+                val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2019-07-07_-_2019-09-22.html")
 
                 val converter = AnidbConverter(testAnidbConfig)
 
@@ -1210,7 +1210,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/anime_season/2019-08-23.html")
+                val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2019-08-23.html")
 
                 val converter = AnidbConverter(testAnidbConfig)
 
@@ -1230,7 +1230,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/anime_season/2017-10-14_-_2020.html")
+                val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2017-10-14_-_2020.html")
 
                 val converter = AnidbConverter(testAnidbConfig)
 
@@ -1250,7 +1250,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/anime_season/2019-10-05_-_2020-03.html")
+                val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2019-10-05_-_2020-03.html")
 
                 val converter = AnidbConverter(testAnidbConfig)
 
@@ -1270,7 +1270,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/anime_season/2022.html")
+                val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2022.html")
 
                 val converter = AnidbConverter(testAnidbConfig)
 
@@ -1290,7 +1290,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/anime_season/2020-06.html")
+                val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2020-06.html")
 
                 val converter = AnidbConverter(testAnidbConfig)
 
@@ -1310,7 +1310,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/anime_season/2020_-_unknown.html")
+                val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2020_-_unknown.html")
 
                 val converter = AnidbConverter(testAnidbConfig)
 
@@ -1330,7 +1330,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/anime_season/not_available.html")
+                val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/not_available.html")
 
                 val converter = AnidbConverter(testAnidbConfig)
 
@@ -1339,6 +1339,26 @@ internal class AnidbConverterTest {
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(0)
+            }
+
+            @Test
+            fun `unknown date with year - unknown`() {
+                // given
+                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
+                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
+                }
+
+                val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/unknown_date_of_year_-_unknown.html")
+
+                val converter = AnidbConverter(testAnidbConfig)
+
+                // when
+                val result = converter.convert(testFile)
+
+                // then
+                assertThat(result.animeSeason.year).isEqualTo(2021)
             }
         }
 
@@ -1357,7 +1377,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/datePublished_spring.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/season/datePublished_spring.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1377,7 +1397,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/datePublished_summer.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/season/datePublished_summer.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1397,7 +1417,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/datePublished_fall.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/season/datePublished_fall.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1417,7 +1437,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/datePublished_winter.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/season/datePublished_winter.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1437,7 +1457,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/datePublished_undefined.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/season/datePublished_undefined.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1461,7 +1481,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/startDate_spring.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/season/startDate_spring.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1481,7 +1501,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/startDate_summer.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/season/startDate_summer.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1501,7 +1521,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/startDate_fall.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/season/startDate_fall.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1521,7 +1541,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/startDate_winter.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/season/startDate_winter.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1541,7 +1561,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/startDate_undefined.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/season/startDate_undefined.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1562,7 +1582,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/anime_season/undefined.html")
+                val testFile = loadTestResource("file_converter_tests/anime_season/season/undefined.html")
 
                 val converter = AnidbConverter(testAnidbConfig)
 
