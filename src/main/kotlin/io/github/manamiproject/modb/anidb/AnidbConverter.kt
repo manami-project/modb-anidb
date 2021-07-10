@@ -58,15 +58,15 @@ public class AnidbConverter(
     private fun extractTitle(document: Document) = document.select("h1.anime").text().replace("Anime: ", EMPTY)
 
     private fun extractEpisodes(document: Document): Int {
-        val episodesString = document.select("span[itemprop=numberOfEpisodes]")?.text()?.trim()
+        val episodesString = document.select("span[itemprop=numberOfEpisodes]").text().trim()
 
-        if (episodesString != null && episodesString.isNotBlank()) {
+        if (episodesString.isNotBlank()) {
             return episodesString.toInt()
         }
 
-        val typeCell = document.select("tr.type > td.value")?.text()?.trim()
+        val typeCell = document.select("tr.type > td.value").text().trim()
 
-        return if (typeCell != null && typeCell.lowercase().contains("unknown number of episodes")) {
+        return if (typeCell.lowercase().contains("unknown number of episodes")) {
             0
         } else {
             1
@@ -127,21 +127,20 @@ public class AnidbConverter(
             .map { it.trim() }
             .forEach { synonyms.add(it) }
 
-        tableFromTitlesTab.select("tr.syn > td")?.text()?.trim()?.split(", ")
-            ?.map { it.trim() }
-            ?.forEach { synonyms.add(it) }
+        tableFromTitlesTab.select("tr.syn > td").text().trim().split(", ")
+            .map { it.trim() }
+            .forEach { synonyms.add(it) }
 
-        tableFromTitlesTab.select("tr.short > td")?.text()?.trim()?.split(", ")
-            ?.map { it.trim() }
-            ?.forEach { synonyms.add(it) }
+        tableFromTitlesTab.select("tr.short > td").text().trim().split(", ")
+            .map { it.trim() }
+            .forEach { synonyms.add(it) }
 
         return synonyms.distinct()
     }
 
     private fun extractSourcesEntry(document: Document): List<URI> {
-        val hrefValue= document.select("link[property=og:url]").attr("href")?.trim()
+        val hrefValue= document.select("link[property=og:url]").attr("href").trim()
 
-        check(hrefValue != null) { "Sources link must not be null" }
         check(hrefValue.isNotBlank()) { "Sources link must not be blank" }
 
         return listOf(URI(hrefValue))
@@ -149,8 +148,8 @@ public class AnidbConverter(
 
     private fun extractRelatedAnime(document: Document): List<URI> {
         val linkElements = document.select("div#tab_main_1_1_pane[class=pane directly_related]")
-            ?.select("a")
-            ?.select("a:has(picture)")
+            .select("a")
+            .select("a:has(picture)")
             ?: emptyList<Element>()
 
         return linkElements.asSequence()
@@ -162,7 +161,7 @@ public class AnidbConverter(
     }
 
     private fun extractStatus(document: Document): Status {
-        val releaseCell = document.selectFirst("tr.year > td.value")
+        val releaseCell = document.selectFirst("tr.year > td.value")!!
         val startDate = releaseCell.select("span[itemprop=startDate]").text()
         val endDate = releaseCell.select("span[itemprop=endDate]").text()
 
@@ -285,9 +284,9 @@ public class AnidbConverter(
 
     private fun extractDuration(document: Document): Duration {
         val duration = document.select("table#eplist")
-            ?.select("tbody")
-            ?.select("tr")
-            ?.first()
+            .select("tbody")
+            .select("tr")
+            .first()
             ?.select("td.duration")
             ?.text()
             ?.replace("m", EMPTY)
@@ -299,7 +298,7 @@ public class AnidbConverter(
     private fun extractAnimeSeason(document: Document): AnimeSeason {
         var cellTextContainingYear = document.select("span[itemprop=startDate]").text()
 
-        if (cellTextContainingYear == null || cellTextContainingYear.isBlank()) {
+        if (cellTextContainingYear.isBlank()) {
            cellTextContainingYear = document.select("span[itemprop=datePublished]").text()
         }
 
