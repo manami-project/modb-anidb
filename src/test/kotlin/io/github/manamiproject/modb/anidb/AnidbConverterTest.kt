@@ -516,6 +516,7 @@ internal class AnidbConverterTest {
 
             // then
             assertThat(result.synonyms).containsExactly(
+                "Bilježnica smrti",
                 "Caderno da Morte",
                 "DEATH NOTE",
                 "DN",
