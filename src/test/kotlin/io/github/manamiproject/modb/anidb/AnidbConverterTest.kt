@@ -1043,7 +1043,7 @@ internal class AnidbConverterTest {
                 override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
             }
 
-            val testFile = loadTestResource("file_converter_tests/duration/null.html")
+            val testFile = loadTestResource("file_converter_tests/duration/missing.html")
 
             val converter = AnidbConverter(testAnidbConfig)
 
