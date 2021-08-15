@@ -33,9 +33,7 @@ public class AnidbDownloader(
             checkIfCrawlerIsDetected()
         }
 
-        if (!response.isOk() && response.code != 404) {
-            throw IllegalStateException("Unable to determine the correct case for [anidbId=$id], [responseCode=${response.code}]")
-        }
+        check(response.isOk() || response.code == 404) { "Unexpected response code [anidbId=$id], [responseCode=${response.code}]" }
 
         return when {
             responseChecker.isHentai || responseChecker.isRemovedFromAnidb -> {

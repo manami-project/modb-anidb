@@ -114,7 +114,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
         }
 
         // then
-        assertThat(result).hasMessage("Unable to determine the correct case for [anidbId=$id], [responseCode=502]")
+        assertThat(result).hasMessage("Unexpected response code [anidbId=$id], [responseCode=502]")
     }
 
     @Test
