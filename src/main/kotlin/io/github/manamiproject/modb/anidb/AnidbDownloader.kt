@@ -3,15 +3,10 @@ package io.github.manamiproject.modb.anidb
 import io.github.manamiproject.modb.core.config.AnimeId
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.downloader.Downloader
-import io.github.manamiproject.modb.core.excludeFromTestContext
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import java.awt.Desktop
-import java.net.URL
 
 /**
  * Downloads anime data from anidb.net
@@ -37,7 +32,7 @@ public class AnidbDownloader(
 
         return when {
             responseChecker.isHentai || responseChecker.isRemovedFromAnidb -> {
-                log.info("Add [anidbId={}] to dead-entries list", id)
+                log.info { "Adding [anidbId=$id] to dead-entries list" }
                 onDeadEntry.invoke(id)
                 EMPTY
             }
