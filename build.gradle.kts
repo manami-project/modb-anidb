@@ -2,6 +2,8 @@ plugins {
     kotlin("jvm") version "1.5.31"
     `maven-publish`
     `java-library`
+    jacoco
+    id("com.github.nbaztec.coveralls-jacoco") version "1.2.13"
 }
 
 val projectName = "modb-anidb"
@@ -117,6 +119,18 @@ publishing {
     }
 }
 
+coverallsJacoco {
+    reportPath = "$buildDir/reports/jacoco/test/jacocoFullReport.xml"
+}
+
+tasks.jacocoTestReport {
+    reports {
+        html.required.set(false)
+        xml.required.set(true)
+        xml.outputLocation.set(file("$buildDir/reports/jacoco/test/jacocoFullReport.xml"))
+    }
+    dependsOn(allprojects.map { it.tasks.named<Test>("test") })
+}
 
 object Versions {
     const val JVM_TARGET = "11"
