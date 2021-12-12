@@ -52,7 +52,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
     }
 
     @Test
-    fun `crawler is detected during download of anime`() {
+    fun `crawler is detected during download of anime and shows anti leech page`() {
         // given
         val id  = "11376"
 
@@ -64,6 +64,40 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
         }
 
         val responseBodyAntiLeech = loadTestResource("downloader_tests/anti_leech_page.html")
+
+        serverInstance.stubFor(
+            get(urlPathEqualTo("/anime/$id")).willReturn(
+                aResponse()
+                    .withHeader("Content-Type", "text/html")
+                    .withStatus(200)
+                    .withBody(responseBodyAntiLeech)
+            )
+        )
+
+        val downloader = AnidbDownloader(testConfig)
+
+        // when
+        val result = assertThrows<RuntimeException> {
+            downloader.download(id) { shouldNotBeInvoked() }
+        }
+
+        // then
+        assertThat(result).hasMessage("Crawler has been detected")
+    }
+
+    @Test
+    fun `crawler is detected during download of anime and shows nginx error page`() {
+        // given
+        val id  = "11376"
+
+        val testConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
+            override fun hostname(): Hostname = "localhost"
+            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+            override fun buildDataDownloadLink(id: String): URI = URI("http://${hostname()}:$port/anime/$id")
+            override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
+        }
+
+        val responseBodyAntiLeech = loadTestResource("downloader_tests/nginx_error_page.html")
 
         serverInstance.stubFor(
             get(urlPathEqualTo("/anime/$id")).willReturn(

@@ -14,7 +14,10 @@ public class AnidbResponseChecker(response: String) {
     public val isRemovedFromAnidb: Boolean = contentContainer.startsWith("Unknown anime id.")
 
     public fun checkIfCrawlerIsDetected() {
-        if (document.select("title").text() == "AniDB AntiLeech - AniDB") {
+        val isAntiLeechPage = document.select("title").text() == "AniDB AntiLeech - AniDB"
+        val isNginxPage = document.select("html > head > title").text() == "403 Forbidden"
+
+        if (isAntiLeechPage || isNginxPage) {
             throw CrawlerDetectedException
         }
     }

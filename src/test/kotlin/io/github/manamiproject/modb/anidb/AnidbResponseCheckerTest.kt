@@ -7,20 +7,40 @@ import org.junit.jupiter.api.Test
 
 internal class AnidbResponseCheckerTest {
 
-    @Test
-    fun `crawler is detected`() {
-        // given
-        val responseBodyAntiLeech = loadTestResource("downloader_tests/anti_leech_page.html")
+    @Nested
+    inner class CrawlerDetectedTests {
 
-        val responseChecker = AnidbResponseChecker(responseBodyAntiLeech)
+        @Test
+        fun `crawler is detected - anti leech page`() {
+            // given
+            val responseBodyAntiLeech = loadTestResource("downloader_tests/anti_leech_page.html")
 
-        // when
-        val result = org.junit.jupiter.api.assertThrows<RuntimeException> {
-            responseChecker.checkIfCrawlerIsDetected()
+            val responseChecker = AnidbResponseChecker(responseBodyAntiLeech)
+
+            // when
+            val result = org.junit.jupiter.api.assertThrows<RuntimeException> {
+                responseChecker.checkIfCrawlerIsDetected()
+            }
+
+            // then
+            assertThat(result).hasMessage("Crawler has been detected")
         }
 
-        // then
-        assertThat(result).hasMessage("Crawler has been detected")
+        @Test
+        fun `crawler is detected - nginx error page`() {
+            // given
+            val responseBodyAntiLeech = loadTestResource("downloader_tests/nginx_error_page.html")
+
+            val responseChecker = AnidbResponseChecker(responseBodyAntiLeech)
+
+            // when
+            val result = org.junit.jupiter.api.assertThrows<RuntimeException> {
+                responseChecker.checkIfCrawlerIsDetected()
+            }
+
+            // then
+            assertThat(result).hasMessage("Crawler has been detected")
+        }
     }
 
     @Nested
