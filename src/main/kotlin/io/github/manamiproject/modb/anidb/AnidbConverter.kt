@@ -139,11 +139,11 @@ public class AnidbConverter(
     }
 
     private fun extractSourcesEntry(document: Document): List<URI> {
-        val hrefValue= document.select("link[property=og:url]").attr("href").trim()
+        val id = document.select("input[type=hidden][name=aid]").first()!!.attr("value").trim()
 
-        check(hrefValue.isNotBlank()) { "Sources link must not be blank" }
+        check(id.isNotBlank()) { "Sources link must not be blank" }
 
-        return listOf(URI(hrefValue))
+        return listOf(config.buildAnimeLink(id))
     }
 
     private fun extractRelatedAnime(document: Document): List<URI> {
