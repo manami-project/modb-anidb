@@ -10,6 +10,7 @@ import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.models.Duration
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.*
 import io.github.manamiproject.modb.test.loadTestResource
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -37,7 +38,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.title).isEqualTo(".hack//G.U. Trilogy")
@@ -61,7 +64,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.episodes).isOne()
@@ -81,7 +86,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.episodes).isOne()
@@ -101,7 +108,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.episodes).isEqualTo(10)
@@ -121,7 +130,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.episodes).isEqualTo(100)
@@ -141,7 +152,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.episodes).isEqualTo(1818)
@@ -161,7 +174,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.episodes).isEqualTo(0)
@@ -185,7 +200,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(MOVIE)
@@ -205,7 +222,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(SPECIAL)
@@ -225,7 +244,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(SPECIAL)
@@ -245,7 +266,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(OVA)
@@ -265,7 +288,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(TV)
@@ -285,7 +310,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(SPECIAL)
@@ -305,7 +332,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(Anime.Type.UNKNOWN)
@@ -325,7 +354,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(ONA)
@@ -349,7 +380,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.picture).isEqualTo(URI("https://cdn.myanimelist.net/images/qm_50.gif"))
@@ -370,7 +403,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.picture).isEqualTo(URI("https://cdn.anidb.net/images/main/221838.jpg"))
@@ -391,7 +426,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.picture).isEqualTo(URI("https://cdn.anidb.net/images/main/237686.jpg"))
@@ -412,7 +449,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.picture).isEqualTo(URI("https://cdn.anidb.net/images/main/237686.jpg"))
@@ -437,7 +476,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.sources).containsExactly(URI("https://anidb.net/anime/11221"))
@@ -461,7 +502,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.relatedAnime).isEmpty()
@@ -481,7 +524,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.relatedAnime).containsExactly(
@@ -512,7 +557,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.synonyms).containsExactly(
@@ -570,7 +617,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(FINISHED)
@@ -590,7 +639,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(FINISHED)
@@ -610,7 +661,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(FINISHED)
@@ -630,7 +683,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(FINISHED)
@@ -650,7 +705,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(FINISHED)
@@ -670,7 +727,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(FINISHED)
@@ -690,7 +749,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(FINISHED)
@@ -710,7 +771,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(UPCOMING)
@@ -730,7 +793,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(UPCOMING)
@@ -750,7 +815,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(UPCOMING)
@@ -770,7 +837,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(UPCOMING)
@@ -790,7 +859,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(UPCOMING)
@@ -810,7 +881,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(UPCOMING)
@@ -830,7 +903,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(UPCOMING)
@@ -850,7 +925,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(ONGOING)
@@ -870,7 +947,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(ONGOING)
@@ -890,7 +969,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(ONGOING)
@@ -910,7 +991,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(ONGOING)
@@ -930,7 +1013,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(Anime.Status.UNKNOWN)
@@ -954,7 +1039,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.tags).containsExactly(
@@ -980,7 +1067,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.tags).isEmpty()
@@ -1000,7 +1089,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.tags).containsExactly(
@@ -1023,7 +1114,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.tags).containsExactly(
@@ -1049,7 +1142,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(0, SECONDS))
@@ -1069,7 +1164,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(0, MINUTES))
@@ -1089,7 +1186,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(1, MINUTES))
@@ -1109,7 +1208,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(25, MINUTES))
@@ -1129,7 +1230,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(1, HOURS))
@@ -1149,7 +1252,9 @@ internal class AnidbConverterTest {
             val converter = AnidbConverter(testAnidbConfig)
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(2, HOURS))
@@ -1176,7 +1281,9 @@ internal class AnidbConverterTest {
                 val converter = AnidbConverter(testAnidbConfig)
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2017)
@@ -1196,7 +1303,9 @@ internal class AnidbConverterTest {
                 val converter = AnidbConverter(testAnidbConfig)
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2019)
@@ -1216,7 +1325,9 @@ internal class AnidbConverterTest {
                 val converter = AnidbConverter(testAnidbConfig)
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2019)
@@ -1236,7 +1347,9 @@ internal class AnidbConverterTest {
                 val converter = AnidbConverter(testAnidbConfig)
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2017)
@@ -1256,7 +1369,9 @@ internal class AnidbConverterTest {
                 val converter = AnidbConverter(testAnidbConfig)
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2019)
@@ -1276,7 +1391,9 @@ internal class AnidbConverterTest {
                 val converter = AnidbConverter(testAnidbConfig)
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2022)
@@ -1296,7 +1413,9 @@ internal class AnidbConverterTest {
                 val converter = AnidbConverter(testAnidbConfig)
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2020)
@@ -1316,7 +1435,9 @@ internal class AnidbConverterTest {
                 val converter = AnidbConverter(testAnidbConfig)
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2020)
@@ -1336,7 +1457,9 @@ internal class AnidbConverterTest {
                 val converter = AnidbConverter(testAnidbConfig)
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(0)
@@ -1356,7 +1479,9 @@ internal class AnidbConverterTest {
                 val converter = AnidbConverter(testAnidbConfig)
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2021)
@@ -1383,7 +1508,9 @@ internal class AnidbConverterTest {
                     val converter = AnidbConverter(testAnidbConfig)
 
                     // when
-                    val result = converter.convert(testFile)
+                    val result = runBlocking {
+                        converter.convertSuspendable(testFile)
+                    }
 
                     // then
                     assertThat(result.animeSeason.season).isEqualTo(SPRING)
@@ -1403,7 +1530,9 @@ internal class AnidbConverterTest {
                     val converter = AnidbConverter(testAnidbConfig)
 
                     // when
-                    val result = converter.convert(testFile)
+                    val result = runBlocking {
+                        converter.convertSuspendable(testFile)
+                    }
 
                     // then
                     assertThat(result.animeSeason.season).isEqualTo(SUMMER)
@@ -1423,7 +1552,9 @@ internal class AnidbConverterTest {
                     val converter = AnidbConverter(testAnidbConfig)
 
                     // when
-                    val result = converter.convert(testFile)
+                    val result = runBlocking {
+                        converter.convertSuspendable(testFile)
+                    }
 
                     // then
                     assertThat(result.animeSeason.season).isEqualTo(FALL)
@@ -1443,7 +1574,9 @@ internal class AnidbConverterTest {
                     val converter = AnidbConverter(testAnidbConfig)
 
                     // when
-                    val result = converter.convert(testFile)
+                    val result = runBlocking {
+                        converter.convertSuspendable(testFile)
+                    }
 
                     // then
                     assertThat(result.animeSeason.season).isEqualTo(WINTER)
@@ -1463,7 +1596,9 @@ internal class AnidbConverterTest {
                     val converter = AnidbConverter(testAnidbConfig)
 
                     // when
-                    val result = converter.convert(testFile)
+                    val result = runBlocking {
+                        converter.convertSuspendable(testFile)
+                    }
 
                     // then
                     assertThat(result.animeSeason.season).isEqualTo(UNDEFINED)
@@ -1487,7 +1622,9 @@ internal class AnidbConverterTest {
                     val converter = AnidbConverter(testAnidbConfig)
 
                     // when
-                    val result = converter.convert(testFile)
+                    val result = runBlocking {
+                        converter.convertSuspendable(testFile)
+                    }
 
                     // then
                     assertThat(result.animeSeason.season).isEqualTo(SPRING)
@@ -1507,7 +1644,9 @@ internal class AnidbConverterTest {
                     val converter = AnidbConverter(testAnidbConfig)
 
                     // when
-                    val result = converter.convert(testFile)
+                    val result = runBlocking {
+                        converter.convertSuspendable(testFile)
+                    }
 
                     // then
                     assertThat(result.animeSeason.season).isEqualTo(SUMMER)
@@ -1527,7 +1666,9 @@ internal class AnidbConverterTest {
                     val converter = AnidbConverter(testAnidbConfig)
 
                     // when
-                    val result = converter.convert(testFile)
+                    val result = runBlocking {
+                        converter.convertSuspendable(testFile)
+                    }
 
                     // then
                     assertThat(result.animeSeason.season).isEqualTo(FALL)
@@ -1547,7 +1688,9 @@ internal class AnidbConverterTest {
                     val converter = AnidbConverter(testAnidbConfig)
 
                     // when
-                    val result = converter.convert(testFile)
+                    val result = runBlocking {
+                        converter.convertSuspendable(testFile)
+                    }
 
                     // then
                     assertThat(result.animeSeason.season).isEqualTo(WINTER)
@@ -1567,7 +1710,9 @@ internal class AnidbConverterTest {
                     val converter = AnidbConverter(testAnidbConfig)
 
                     // when
-                    val result = converter.convert(testFile)
+                    val result = runBlocking {
+                        converter.convertSuspendable(testFile)
+                    }
 
                     // then
                     assertThat(result.animeSeason.season).isEqualTo(UNDEFINED)
@@ -1588,7 +1733,9 @@ internal class AnidbConverterTest {
                 val converter = AnidbConverter(testAnidbConfig)
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.season).isEqualTo(UNDEFINED)

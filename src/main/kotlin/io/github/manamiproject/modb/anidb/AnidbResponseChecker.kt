@@ -1,19 +1,29 @@
 package io.github.manamiproject.modb.anidb
 
+import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 
 public object CrawlerDetectedException : RuntimeException("Crawler has been detected")
 
 public class AnidbResponseChecker(response: String) {
 
-    private val document = Jsoup.parse(response)
-    private val contentContainer = document.select("div#layout-content").select("div.container").text()
+    private val document by lazy { Jsoup.parse(response) }
+    private val contentContainer by lazy { document.select("div#layout-content").select("div.container").text() }
 
-    public val isAdditionPending: Boolean = contentContainer.startsWith("A request for the addition of this title to AniDB is currently")
-    public val isHentai: Boolean = contentContainer.startsWith("This anime is marked as 18+ restricted")
-    public val isRemovedFromAnidb: Boolean = contentContainer.startsWith("Unknown anime id.")
+    public suspend fun isAdditionPending(): Boolean = withContext(LIMITED_CPU) {
+        contentContainer.startsWith("A request for the addition of this title to AniDB is currently")
+    }
 
-    public fun checkIfCrawlerIsDetected() {
+    public suspend fun isHentai(): Boolean = withContext(LIMITED_CPU) {
+        contentContainer.startsWith("This anime is marked as 18+ restricted")
+    }
+
+    public suspend fun isRemovedFromAnidb(): Boolean = withContext(LIMITED_CPU) {
+        contentContainer.startsWith("Unknown anime id.")
+    }
+
+    public suspend fun checkIfCrawlerIsDetected(): Unit = withContext(LIMITED_CPU) {
         val isAntiLeechPage = document.select("title").text() == "AniDB AntiLeech - AniDB"
         val isNginxPage = document.select("html > head > title").text() == "403 Forbidden"
 

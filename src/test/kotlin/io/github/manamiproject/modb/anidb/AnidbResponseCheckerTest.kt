@@ -1,6 +1,8 @@
 package io.github.manamiproject.modb.anidb
 
+import io.github.manamiproject.modb.test.exceptionExpected
 import io.github.manamiproject.modb.test.loadTestResource
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -18,7 +20,7 @@ internal class AnidbResponseCheckerTest {
             val responseChecker = AnidbResponseChecker(responseBodyAntiLeech)
 
             // when
-            val result = org.junit.jupiter.api.assertThrows<RuntimeException> {
+            val result = exceptionExpected<RuntimeException> {
                 responseChecker.checkIfCrawlerIsDetected()
             }
 
@@ -34,7 +36,7 @@ internal class AnidbResponseCheckerTest {
             val responseChecker = AnidbResponseChecker(responseBodyAntiLeech)
 
             // when
-            val result = org.junit.jupiter.api.assertThrows<RuntimeException> {
+            val result = exceptionExpected<RuntimeException> {
                 responseChecker.checkIfCrawlerIsDetected()
             }
 
@@ -44,7 +46,7 @@ internal class AnidbResponseCheckerTest {
     }
 
     @Nested
-    inner class isHentaiTests {
+    inner class IsHentaiTests {
 
         @Test
         fun `isHentai returns false on regular entry`() {
@@ -54,7 +56,9 @@ internal class AnidbResponseCheckerTest {
             val responseChecker = AnidbResponseChecker(responseBody)
 
             // when
-            val result = responseChecker.isHentai
+            val result = runBlocking {
+                responseChecker.isHentai()
+            }
 
             // then
             assertThat(result).isFalse()
@@ -68,7 +72,9 @@ internal class AnidbResponseCheckerTest {
             val responseChecker = AnidbResponseChecker(responseBody)
 
             // when
-            val result = responseChecker.isHentai
+            val result = runBlocking {
+                responseChecker.isHentai()
+            }
 
             // then
             assertThat(result).isTrue()
@@ -76,7 +82,7 @@ internal class AnidbResponseCheckerTest {
     }
 
     @Nested
-    inner class isAdditionPendingTests {
+    inner class IsAdditionPendingTests {
 
         @Test
         fun `isAdditionPending returns false on regular entry`() {
@@ -86,7 +92,9 @@ internal class AnidbResponseCheckerTest {
             val responseChecker = AnidbResponseChecker(responseBody)
 
             // when
-            val result = responseChecker.isAdditionPending
+            val result = runBlocking {
+                responseChecker.isAdditionPending()
+            }
 
             // then
             assertThat(result).isFalse()
@@ -100,7 +108,9 @@ internal class AnidbResponseCheckerTest {
             val responseChecker = AnidbResponseChecker(responseBody)
 
             // when
-            val result = responseChecker.isAdditionPending
+            val result = runBlocking {
+                responseChecker.isAdditionPending()
+            }
 
             // then
             assertThat(result).isTrue()
@@ -108,7 +118,7 @@ internal class AnidbResponseCheckerTest {
     }
 
     @Nested
-    inner class isRemovedFromAnidbTests {
+    inner class IsRemovedFromAnidbTests {
 
         @Test
         fun `isRemovedFromAnidb returns false on regular entry`() {
@@ -118,7 +128,9 @@ internal class AnidbResponseCheckerTest {
             val responseChecker = AnidbResponseChecker(responseBody)
 
             // when
-            val result = responseChecker.isRemovedFromAnidb
+            val result = runBlocking {
+                responseChecker.isRemovedFromAnidb()
+            }
 
             // then
             assertThat(result).isFalse()
@@ -132,7 +144,9 @@ internal class AnidbResponseCheckerTest {
             val responseChecker = AnidbResponseChecker(responseBody)
 
             // when
-            val result = responseChecker.isRemovedFromAnidb
+            val result = runBlocking {
+                responseChecker.isRemovedFromAnidb()
+            }
 
             // then
             assertThat(result).isTrue()
