@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
  */
 public class AnidbDownloader(
     private val config: MetaDataProviderConfig,
-    private val httpClient: HttpClient = DefaultHttpClient()
+    private val httpClient: HttpClient = DefaultHttpClient(isTestContext = config.isTestContext())
 ) : Downloader {
 
     @Deprecated("Use coroutines",
