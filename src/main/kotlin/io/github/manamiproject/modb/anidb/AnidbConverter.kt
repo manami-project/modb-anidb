@@ -2,6 +2,7 @@ package io.github.manamiproject.modb.anidb
 
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
+import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.models.*
 import io.github.manamiproject.modb.core.models.Anime.Status
@@ -11,6 +12,8 @@ import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.MINUTES
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -33,12 +36,17 @@ public class AnidbConverter(
     private val currentMonth = LocalDate.now(clock).monthValue
     private val currentYear = LocalDate.now(clock).year
 
-    override fun convert(rawContent: String): Anime {
+    @Deprecated("Use coroutines")
+    override fun convert(rawContent: String): Anime = runBlocking {
+        convertSuspendable(rawContent)
+    }
+
+    override suspend fun convertSuspendable(rawContent: String): Anime = withContext(LIMITED_CPU) {
         val document = Jsoup.parse(rawContent)
 
         val picture = extractPicture(document)
 
-        return Anime(
+        return@withContext Anime(
             _title = extractTitle(document),
             episodes = extractEpisodes(document),
             type = extractType(document),
