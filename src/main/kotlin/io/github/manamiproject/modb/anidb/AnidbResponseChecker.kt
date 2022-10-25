@@ -1,6 +1,7 @@
 package io.github.manamiproject.modb.anidb
 
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 
@@ -23,7 +24,11 @@ public class AnidbResponseChecker(response: String) {
         contentContainer.startsWith("Unknown anime id.")
     }
 
-    public suspend fun checkIfCrawlerIsDetected(): Unit = withContext(LIMITED_CPU) {
+    public fun checkIfCrawlerIsDetected(): Unit = runBlocking {
+        checkIfCrawlerIsDetectedSuspendable()
+    }
+
+    public suspend fun checkIfCrawlerIsDetectedSuspendable(): Unit = withContext(LIMITED_CPU) {
         val isAntiLeechPage = document.select("title").text() == "AniDB AntiLeech - AniDB"
         val isNginxPage = document.select("html > head > title").text() == "403 Forbidden"
 

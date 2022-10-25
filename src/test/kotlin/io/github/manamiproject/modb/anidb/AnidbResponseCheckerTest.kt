@@ -21,7 +21,7 @@ internal class AnidbResponseCheckerTest {
 
             // when
             val result = exceptionExpected<RuntimeException> {
-                responseChecker.checkIfCrawlerIsDetected()
+                responseChecker.checkIfCrawlerIsDetectedSuspendable()
             }
 
             // then
@@ -37,7 +37,7 @@ internal class AnidbResponseCheckerTest {
 
             // when
             val result = exceptionExpected<RuntimeException> {
-                responseChecker.checkIfCrawlerIsDetected()
+                responseChecker.checkIfCrawlerIsDetectedSuspendable()
             }
 
             // then
