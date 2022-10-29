@@ -12,9 +12,9 @@ import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.MINUTES
+import io.github.manamiproject.modb.core.parseHtml
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.net.URI
@@ -42,7 +42,7 @@ public class AnidbConverter(
     }
 
     override suspend fun convertSuspendable(rawContent: String): Anime = withContext(LIMITED_CPU) {
-        val document = Jsoup.parse(rawContent)
+        val document = parseHtml(rawContent)
 
         val picture = extractPicture(document)
 
