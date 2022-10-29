@@ -36,7 +36,7 @@ public class AnidbConverter(
     private val currentMonth = LocalDate.now(clock).monthValue
     private val currentYear = LocalDate.now(clock).year
 
-    @Deprecated("Use coroutines")
+    @Deprecated("Use coroutines", ReplaceWith(EMPTY))
     override fun convert(rawContent: String): Anime = runBlocking {
         convertSuspendable(rawContent)
     }
