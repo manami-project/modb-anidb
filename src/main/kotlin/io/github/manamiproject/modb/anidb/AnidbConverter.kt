@@ -13,7 +13,6 @@ import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.MINUTES
 import io.github.manamiproject.modb.core.parseHtml
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -36,12 +35,7 @@ public class AnidbConverter(
     private val currentMonth = LocalDate.now(clock).monthValue
     private val currentYear = LocalDate.now(clock).year
 
-    @Deprecated("Use coroutines", ReplaceWith(EMPTY))
-    override fun convert(rawContent: String): Anime = runBlocking {
-        convertSuspendable(rawContent)
-    }
-
-    override suspend fun convertSuspendable(rawContent: String): Anime = withContext(LIMITED_CPU) {
+    override suspend fun convert(rawContent: String): Anime = withContext(LIMITED_CPU) {
         val document = parseHtml(rawContent)
 
         val picture = extractPicture(document)
@@ -54,7 +48,7 @@ public class AnidbConverter(
             thumbnail = extractThumbnail(picture),
             status = extractStatus(document),
             duration = extractDuration(document),
-            animeSeason = extractAnimeSeason(document)
+            animeSeason = extractAnimeSeason(document),
         ).apply {
             addSources(extractSourcesEntry(document))
             addSynonyms(extractSynonyms(document))

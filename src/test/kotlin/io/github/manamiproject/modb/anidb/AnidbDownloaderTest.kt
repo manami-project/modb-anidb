@@ -41,7 +41,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         // when
         val result = runBlocking {
-            downloader.downloadSuspendable(id) {
+            downloader.download(id) {
                 shouldNotBeInvoked()
             }
         }
@@ -77,7 +77,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         // when
         val result = exceptionExpected<RuntimeException> {
-            downloader.downloadSuspendable(id) { shouldNotBeInvoked() }
+            downloader.download(id) { shouldNotBeInvoked() }
         }
 
         // then
@@ -111,7 +111,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         // when
         val result = exceptionExpected<RuntimeException> {
-            downloader.downloadSuspendable(id) { shouldNotBeInvoked() }
+            downloader.download(id) { shouldNotBeInvoked() }
         }
 
         // then
@@ -143,7 +143,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         // when
         val result = exceptionExpected<IllegalStateException> {
-            downloader.downloadSuspendable(id) { shouldNotBeInvoked() }
+            downloader.download(id) { shouldNotBeInvoked() }
         }
 
         // then
@@ -178,7 +178,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         // when
         val result = runBlocking {
-            downloader.downloadSuspendable(id) {
+            downloader.download(id) {
                 deadEntry = it
             }
         }
@@ -216,7 +216,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         // when
         val result = runBlocking {
-            downloader.downloadSuspendable(id) {
+            downloader.download(id) {
                 deadEntry = it
             }
         }
@@ -254,7 +254,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         // when
         val result = runBlocking {
-            downloader.downloadSuspendable(id) {
+            downloader.download(id) {
                 deadEntry = it
             }
         }
@@ -289,7 +289,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         // when
         val result = runBlocking {
-            downloader.downloadSuspendable(id) {
+            downloader.download(id) {
                 shouldNotBeInvoked()
             }
         }
@@ -323,7 +323,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
 
         // when
         val result = exceptionExpected<IllegalStateException> {
-            downloader.downloadSuspendable(id.toAnimeId()) { shouldNotBeInvoked() }
+            downloader.download(id.toAnimeId()) { shouldNotBeInvoked() }
         }
 
         // then
