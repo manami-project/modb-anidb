@@ -596,7 +596,7 @@ internal class AnidbConverterTest {
                     "डेथ नोट",
                     "デスノート",
                     "死亡笔记",
-                    "데스노트"
+                    "데스노트",
                 )
             }
         }
@@ -1061,7 +1061,7 @@ internal class AnidbConverterTest {
                     "detective",
                     "manga",
                     "shounen",
-                    "thriller"
+                    "thriller",
                 )
             }
         }
@@ -1108,7 +1108,7 @@ internal class AnidbConverterTest {
                 // then
                 assertThat(result.tags).containsExactly(
                     "new",
-                    "short movie"
+                    "short movie",
                 )
             }
         }
