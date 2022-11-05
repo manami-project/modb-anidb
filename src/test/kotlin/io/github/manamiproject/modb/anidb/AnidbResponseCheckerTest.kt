@@ -50,34 +50,34 @@ internal class AnidbResponseCheckerTest {
 
         @Test
         fun `isHentai returns false on regular entry`() {
-            // given
-            val responseBody = loadTestResource("file_converter_tests/title/special_chars.html")
+            runBlocking {
+                // given
+                val responseBody = loadTestResource("file_converter_tests/title/special_chars.html")
 
-            val responseChecker = AnidbResponseChecker(responseBody)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
-            // when
-            val result = runBlocking {
-                responseChecker.isHentai()
+                // when
+                val result = responseChecker.isHentai()
+
+                // then
+                assertThat(result).isFalse()
             }
-
-            // then
-            assertThat(result).isFalse()
         }
 
         @Test
         fun `isHentai returns true`() {
-            // given
-            val responseBody = loadTestResource("downloader_tests/hentai.html")
+            runBlocking {
+                // given
+                val responseBody = loadTestResource("downloader_tests/hentai.html")
 
-            val responseChecker = AnidbResponseChecker(responseBody)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
-            // when
-            val result = runBlocking {
-                responseChecker.isHentai()
+                // when
+                val result = responseChecker.isHentai()
+
+                // then
+                assertThat(result).isTrue()
             }
-
-            // then
-            assertThat(result).isTrue()
         }
     }
 
@@ -86,34 +86,34 @@ internal class AnidbResponseCheckerTest {
 
         @Test
         fun `isAdditionPending returns false on regular entry`() {
-            // given
-            val responseBody = loadTestResource("file_converter_tests/title/special_chars.html")
+            runBlocking {
+                // given
+                val responseBody = loadTestResource("file_converter_tests/title/special_chars.html")
 
-            val responseChecker = AnidbResponseChecker(responseBody)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
-            // when
-            val result = runBlocking {
-                responseChecker.isAdditionPending()
+                // when
+                val result = responseChecker.isAdditionPending()
+
+                // then
+                assertThat(result).isFalse()
             }
-
-            // then
-            assertThat(result).isFalse()
         }
 
         @Test
         fun `isAdditionPending returns true`() {
-            // given
-            val responseBody = loadTestResource("downloader_tests/addition_pending.html")
+            runBlocking {
+                // given
+                val responseBody = loadTestResource("downloader_tests/addition_pending.html")
 
-            val responseChecker = AnidbResponseChecker(responseBody)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
-            // when
-            val result = runBlocking {
-                responseChecker.isAdditionPending()
+                // when
+                val result = responseChecker.isAdditionPending()
+
+                // then
+                assertThat(result).isTrue()
             }
-
-            // then
-            assertThat(result).isTrue()
         }
     }
 
@@ -122,34 +122,34 @@ internal class AnidbResponseCheckerTest {
 
         @Test
         fun `isRemovedFromAnidb returns false on regular entry`() {
-            // given
-            val responseBody = loadTestResource("file_converter_tests/title/special_chars.html")
+            runBlocking {
+                // given
+                val responseBody = loadTestResource("file_converter_tests/title/special_chars.html")
 
-            val responseChecker = AnidbResponseChecker(responseBody)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
-            // when
-            val result = runBlocking {
-                responseChecker.isRemovedFromAnidb()
+                // when
+                val result = responseChecker.isRemovedFromAnidb()
+
+                // then
+                assertThat(result).isFalse()
             }
-
-            // then
-            assertThat(result).isFalse()
         }
 
         @Test
         fun `isRemovedFromAnidb returns true`() {
-            // given
-            val responseBody = loadTestResource("downloader_tests/deleted_entry.html")
+            runBlocking {
+                // given
+                val responseBody = loadTestResource("downloader_tests/deleted_entry.html")
 
-            val responseChecker = AnidbResponseChecker(responseBody)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
-            // when
-            val result = runBlocking {
-                responseChecker.isRemovedFromAnidb()
+                // when
+                val result = responseChecker.isRemovedFromAnidb()
+
+                // then
+                assertThat(result).isTrue()
             }
-
-            // then
-            assertThat(result).isTrue()
         }
     }
 }
