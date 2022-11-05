@@ -1,8 +1,9 @@
 package io.github.manamiproject.modb.anidb
 
+import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
+import io.github.manamiproject.modb.core.coroutines.CoroutineManager.runCoroutine
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
 import io.github.manamiproject.modb.core.parseHtml
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 /**
@@ -16,9 +17,9 @@ public object CrawlerDetectedException : RuntimeException("Crawler has been dete
  * @since 2.1.0
  * @param response raw HTML
  */
-public class AnidbResponseChecker(response: String) {
+public class AnidbResponseChecker(response: String, config: MetaDataProviderConfig = AnidbConfig) {
 
-    private val document by lazy { runBlocking { parseHtml(response) } }
+    private val document by lazy { runCoroutine(config.isTestContext()) { parseHtml(response) } }
     private val contentContainer by lazy { document.select("div#layout-content").select("div.container").text() }
 
     /**
