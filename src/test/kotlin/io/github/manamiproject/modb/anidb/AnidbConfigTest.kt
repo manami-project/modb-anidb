@@ -1,7 +1,7 @@
 package io.github.manamiproject.modb.anidb
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import java.net.URI
 
 internal class AnidbConfigTest {

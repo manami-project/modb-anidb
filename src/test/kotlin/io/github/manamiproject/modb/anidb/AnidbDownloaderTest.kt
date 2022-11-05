@@ -11,7 +11,7 @@ import io.github.manamiproject.modb.core.extensions.toAnimeId
 import io.github.manamiproject.modb.test.*
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import java.net.URI
 
 internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireMockServerCreator() {
