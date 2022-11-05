@@ -17,7 +17,7 @@ internal class AnidbResponseCheckerTest {
             // given
             val responseBodyAntiLeech = loadTestResource("downloader_tests/anti_leech_page.html")
 
-            val responseChecker = AnidbResponseChecker(responseBodyAntiLeech, MetaDataProviderTestConfig)
+            val responseChecker = AnidbResponseChecker(responseBodyAntiLeech)
 
             // when
             val result = exceptionExpected<RuntimeException> {
@@ -33,7 +33,7 @@ internal class AnidbResponseCheckerTest {
             // given
             val responseBodyAntiLeech = loadTestResource("downloader_tests/nginx_error_page.html")
 
-            val responseChecker = AnidbResponseChecker(responseBodyAntiLeech, MetaDataProviderTestConfig)
+            val responseChecker = AnidbResponseChecker(responseBodyAntiLeech)
 
             // when
             val result = exceptionExpected<RuntimeException> {
@@ -54,7 +54,7 @@ internal class AnidbResponseCheckerTest {
                 // given
                 val responseBody = loadTestResource("file_converter_tests/title/special_chars.html")
 
-                val responseChecker = AnidbResponseChecker(responseBody, MetaDataProviderTestConfig)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
                 // when
                 val result = responseChecker.isHentai()
@@ -70,7 +70,7 @@ internal class AnidbResponseCheckerTest {
                 // given
                 val responseBody = loadTestResource("downloader_tests/hentai.html")
 
-                val responseChecker = AnidbResponseChecker(responseBody, MetaDataProviderTestConfig)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
                 // when
                 val result = responseChecker.isHentai()
@@ -90,7 +90,7 @@ internal class AnidbResponseCheckerTest {
                 // given
                 val responseBody = loadTestResource("file_converter_tests/title/special_chars.html")
 
-                val responseChecker = AnidbResponseChecker(responseBody, MetaDataProviderTestConfig)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
                 // when
                 val result = responseChecker.isAdditionPending()
@@ -106,7 +106,7 @@ internal class AnidbResponseCheckerTest {
                 // given
                 val responseBody = loadTestResource("downloader_tests/addition_pending.html")
 
-                val responseChecker = AnidbResponseChecker(responseBody, MetaDataProviderTestConfig)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
                 // when
                 val result = responseChecker.isAdditionPending()
@@ -126,7 +126,7 @@ internal class AnidbResponseCheckerTest {
                 // given
                 val responseBody = loadTestResource("file_converter_tests/title/special_chars.html")
 
-                val responseChecker = AnidbResponseChecker(responseBody, MetaDataProviderTestConfig)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
                 // when
                 val result = responseChecker.isRemovedFromAnidb()
@@ -142,7 +142,7 @@ internal class AnidbResponseCheckerTest {
                 // given
                 val responseBody = loadTestResource("downloader_tests/deleted_entry.html")
 
-                val responseChecker = AnidbResponseChecker(responseBody, MetaDataProviderTestConfig)
+                val responseChecker = AnidbResponseChecker(responseBody)
 
                 // when
                 val result = responseChecker.isRemovedFromAnidb()
