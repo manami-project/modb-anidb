@@ -28,7 +28,7 @@ import java.time.LocalDate
  */
 public class AnidbConverter(
     private val config: MetaDataProviderConfig = AnidbConfig,
-    clock: Clock = Clock.systemDefaultZone()
+    clock: Clock = Clock.systemDefaultZone(),
 ) : AnimeConverter {
 
     private val currentDay = LocalDate.now(clock).dayOfMonth
