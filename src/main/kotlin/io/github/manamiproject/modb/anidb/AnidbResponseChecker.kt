@@ -23,7 +23,7 @@ public class AnidbResponseChecker(response: String) {
 
     /**
      * Checks if an entry's addition is still pending. This means that the page doesn't contain any data.
-     * @since 8.0.0
+     * @since 4.0.0
      * @return `true` if the entry is still pending addition.
      */
     public suspend fun isAdditionPending(): Boolean = withContext(LIMITED_CPU) {
@@ -33,7 +33,7 @@ public class AnidbResponseChecker(response: String) {
     /**
      * Checks if an entry is only visible with an account, because it is an anime for adults only. In this case
      * the page doesn't contain any data.
-     * @since 8.0.0
+     * @since 4.0.0
      * @return `true` if the entry is marked as for adults only.
      */
     public suspend fun isHentai(): Boolean = withContext(LIMITED_CPU) {
@@ -42,7 +42,7 @@ public class AnidbResponseChecker(response: String) {
 
     /**
      * Checks if an entry has been removed.
-     * @since 8.0.0
+     * @since 4.0.0
      * @return `true` if the entry has been removed.
      */
     public suspend fun isRemovedFromAnidb(): Boolean = withContext(LIMITED_CPU) {
@@ -51,7 +51,7 @@ public class AnidbResponseChecker(response: String) {
 
     /**
      * Checks if crawler has been detected.
-     * @since 8.0.0
+     * @since 4.0.0
      * @return `true` if the antileech page is shown.
      */
     public suspend fun checkIfCrawlerIsDetected(): Unit = withContext(LIMITED_CPU) {
