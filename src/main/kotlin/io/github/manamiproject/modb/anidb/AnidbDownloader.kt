@@ -26,7 +26,7 @@ public class AnidbDownloader(
 
         check(response.body.isNotBlank()) { "Response body was blank for [anidbId=$id] with response code [${response.code}]" }
 
-        val responseChecker = AnidbResponseChecker(response.body, config).apply {
+        val responseChecker = AnidbResponseChecker(response.body).apply {
             checkIfCrawlerIsDetected()
         }
 
