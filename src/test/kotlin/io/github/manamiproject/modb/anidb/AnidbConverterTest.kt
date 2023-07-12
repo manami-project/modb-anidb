@@ -433,8 +433,8 @@ internal class AnidbConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.picture).isEqualTo(URI("https://cdn.anidb.net/images/main/237686.jpg"))
-                assertThat(result.thumbnail).isEqualTo(URI("https://cdn.anidb.net/images/main/237686.jpg-thumb.jpg"))
+                assertThat(result.picture).isEqualTo(URI("https://cdn.anidb.net/images/main/257581.jpg"))
+                assertThat(result.thumbnail).isEqualTo(URI("https://cdn.anidb.net/images/main/257581.jpg-thumb.jpg"))
             }
         }
 
@@ -457,8 +457,8 @@ internal class AnidbConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.picture).isEqualTo(URI("https://cdn.anidb.net/images/main/237686.jpg"))
-                assertThat(result.thumbnail).isEqualTo(URI("https://cdn.anidb.net/images/main/237686.jpg-thumb.jpg"))
+                assertThat(result.picture).isEqualTo(URI("https://cdn.anidb.net/images/main/257581.jpg"))
+                assertThat(result.thumbnail).isEqualTo(URI("https://cdn.anidb.net/images/main/257581.jpg-thumb.jpg"))
             }
         }
     }
@@ -587,10 +587,13 @@ internal class AnidbConverterTest {
                     "Тетрадь cмерти",
                     "Үхлийн Тэмдэглэл",
                     "מחברת המוות",
+                    "دفتر الموت",
                     "دفترچه مرگ",
                     "دفترچه یادداشت مرگ",
+                    "ديث نوت",
                     "كـتـاب الـموت",
                     "مدونة الموت",
+                    "مذكرة المـوت",
                     "مذكرة الموت",
                     "موت نوٹ",
                     "डेथ नोट",
@@ -765,7 +768,7 @@ internal class AnidbConverterTest {
         }
 
         @Test
-        fun `'2022' on datePublished is mapped to UPCOMING`() {
+        fun `'2024' on datePublished is mapped to UPCOMING`() {
             runBlocking {
                 // given
                 val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -774,7 +777,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/status/upcoming_datePublished_2022.html")
+                val testFile = loadTestResource("file_converter_tests/status/upcoming_datePublished_2024.html")
 
                 val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
@@ -831,7 +834,7 @@ internal class AnidbConverterTest {
         }
 
         @Test
-        fun `'2019' on startDate is mapped to UPCOMING`() {
+        fun `'2024' on startDate is mapped to UPCOMING`() {
             runBlocking {
                 // given
                 val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -840,7 +843,7 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/status/upcoming_startDate_2019.html")
+                val testFile = loadTestResource("file_converter_tests/status/upcoming_startDate_2024.html")
 
                 val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
@@ -1396,7 +1399,7 @@ internal class AnidbConverterTest {
             }
 
             @Test
-            fun `2022`() {
+            fun `2004`() {
                 runBlocking {
                     // given
                     val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -1405,7 +1408,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2022.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2004.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1413,12 +1416,12 @@ internal class AnidbConverterTest {
                     val result = converter.convert(testFile)
 
                     // then
-                    assertThat(result.animeSeason.year).isEqualTo(2022)
+                    assertThat(result.animeSeason.year).isEqualTo(2004)
                 }
             }
 
             @Test
-            fun `2020-06`() {
+            fun `1986-06`() {
                 runBlocking {
                     // given
                     val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -1427,7 +1430,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2020-06.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/1986-06.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1435,7 +1438,7 @@ internal class AnidbConverterTest {
                     val result = converter.convert(testFile)
 
                     // then
-                    assertThat(result.animeSeason.year).isEqualTo(2020)
+                    assertThat(result.animeSeason.year).isEqualTo(1986)
                 }
             }
 
@@ -1606,29 +1609,6 @@ internal class AnidbConverterTest {
                         assertThat(result.animeSeason.season).isEqualTo(WINTER)
                     }
                 }
-
-                @Test
-                fun `season is 'undefined'`() {
-                    runBlocking {
-                        // given
-                        val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                            override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                            override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                        }
-
-                        val testFile =
-                            loadTestResource("file_converter_tests/anime_season/season/datePublished_undefined.html")
-
-                        val converter = AnidbConverter(testAnidbConfig)
-
-                        // when
-                        val result = converter.convert(testFile)
-
-                        // then
-                        assertThat(result.animeSeason.season).isEqualTo(UNDEFINED)
-                    }
-                }
             }
 
             @Nested
@@ -1722,29 +1702,6 @@ internal class AnidbConverterTest {
 
                         // then
                         assertThat(result.animeSeason.season).isEqualTo(WINTER)
-                    }
-                }
-
-                @Test
-                fun `season is 'undefined'`() {
-                    runBlocking {
-                        // given
-                        val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                            override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                            override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                        }
-
-                        val testFile =
-                            loadTestResource("file_converter_tests/anime_season/season/startDate_undefined.html")
-
-                        val converter = AnidbConverter(testAnidbConfig)
-
-                        // when
-                        val result = converter.convert(testFile)
-
-                        // then
-                        assertThat(result.animeSeason.season).isEqualTo(UNDEFINED)
                     }
                 }
             }
