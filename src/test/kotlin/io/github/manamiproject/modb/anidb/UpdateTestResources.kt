@@ -28,6 +28,7 @@ internal fun main() {
         downloader.download("12676").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/1986-06.html"))
         downloader.download("14988").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/2020_-_unknown.html"))
         downloader.download("10077").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/2004.html"))
+        downloader.download("9987").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/date_published_but_with_time_period.html"))
         downloader.download("10075").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/not_available.html"))
         downloader.download("15911").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/unknown_date_of_year_-_unknown.html"))
     
@@ -55,26 +56,11 @@ internal fun main() {
     
         downloader.download("11221").writeToFile(resourceFile("file_converter_tests/sources/11221.html"))
     
-        downloader.download("14918").writeToFile(resourceFile("file_converter_tests/status/currently_endDate_01-11-2019_till_03-04-2020.html"))
-        downloader.download("10311").writeToFile(resourceFile("file_converter_tests/status/currently_endDate_07-12-2013_till_unknown.html"))
-        downloader.download("13441").writeToFile(resourceFile("file_converter_tests/status/currently_endDate_08-10-2019_till_24-12-2019.html"))
-        downloader.download("15067").writeToFile(resourceFile("file_converter_tests/status/currently_startDate_17-11-2019_till_unknown.html"))
-        downloader.download("14683").writeToFile(resourceFile("file_converter_tests/status/finished_datePublished_08-11-2019.html"))
-        downloader.download("10000").writeToFile(resourceFile("file_converter_tests/status/finished_datePublished_29-06-1990.html"))
-        downloader.download("10546").writeToFile(resourceFile("file_converter_tests/status/finished_datePublished_29-06-2019.html"))
-        downloader.download("1").writeToFile(resourceFile("file_converter_tests/status/finished_endDate_03-01-1999_till_28-03-1999.html"))
-        downloader.download("10761").writeToFile(resourceFile("file_converter_tests/status/finished_endDate_16-05-2014_till_16-08-2019.html"))
-        downloader.download("12407").writeToFile(resourceFile("file_converter_tests/status/finished_endDate_17-11-2016_till_03-11-2019.html"))
-        downloader.download("11216").writeToFile(resourceFile("file_converter_tests/status/finished_endDate_31-07-2019.html"))
-        downloader.download("10075").writeToFile(resourceFile("file_converter_tests/status/unknown.html"))
-        downloader.download("14071").writeToFile(resourceFile("file_converter_tests/status/upcoming_datePublished_13-12-2019.html"))
-        downloader.download("12710").writeToFile(resourceFile("file_converter_tests/status/upcoming_datePublished_2019.html"))
-        downloader.download("17707").writeToFile(resourceFile("file_converter_tests/status/upcoming_datePublished_2024.html"))
-        downloader.download("14259").writeToFile(resourceFile("file_converter_tests/status/upcoming_startDate_23-11-2019_till_unknown.html"))
-        downloader.download("13108").writeToFile(resourceFile("file_converter_tests/status/upcoming_startDate_29-11-2019_till_unknown.html"))
-        downloader.download("16443").writeToFile(resourceFile("file_converter_tests/status/upcoming_startDate_2024.html"))
-        downloader.download("12525").writeToFile(resourceFile("file_converter_tests/status/upcoming_startDate_2021_till_unknown.html"))
-    
+        downloader.download("3348").writeToFile(resourceFile("file_converter_tests/status/start_to_end.html"))
+        downloader.download("15625").writeToFile(resourceFile("file_converter_tests/status/start_to_unknown.html"))
+        downloader.download("8857").writeToFile(resourceFile("file_converter_tests/status/date_published.html.html"))
+        downloader.download("17862").writeToFile(resourceFile("file_converter_tests/status/unknown.html"))
+
         downloader.download("4563").writeToFile(resourceFile("file_converter_tests/synonyms/all_types.html"))
     
         downloader.download("4563").writeToFile(resourceFile("file_converter_tests/tags/multiple_tags_with_similar.html"))

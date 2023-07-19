@@ -31,9 +31,7 @@ public class AnidbConverter(
     clock: Clock = Clock.systemDefaultZone(),
 ) : AnimeConverter {
 
-    private val currentDay = LocalDate.now(clock).dayOfMonth
-    private val currentMonth = LocalDate.now(clock).monthValue
-    private val currentYear = LocalDate.now(clock).year
+    private val currentDate = LocalDate.now(clock)
 
     override suspend fun convert(rawContent: String): Anime = withContext(LIMITED_CPU) {
         val document = parseHtml(rawContent)
@@ -164,123 +162,63 @@ public class AnidbConverter(
 
     private fun extractStatus(document: Document): Status {
         val releaseCell = document.selectFirst("tr.year > td.value")!!
-        val startDate = releaseCell.select("span[itemprop=startDate]").text()
-        val endDate = releaseCell.select("span[itemprop=endDate]").text()
+        val startDateAttr = releaseCell.select("span[itemprop=startDate]").attr("content").trim()
+        val endDateAttr = releaseCell.select("span[itemprop=endDate]").attr("content").trim()
+        val isTimePeriod = releaseCell.text().trim().contains("until")
 
-        if ((startDate.isNotBlank() && endDate.isNotBlank()) || (startDate.isNotBlank() && releaseCell.text().contains("till"))) {
-            var hasEnded = false
-            var hasStarted = false
+        val dateFormat = Regex("(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})")
 
-            val splitStartDate = startDate.split('.')
-
-            when {
-                splitStartDate[YEAR_ELEMENT].toInt() > currentYear -> hasStarted = false
-                splitStartDate[YEAR_ELEMENT].toInt() < currentYear -> hasStarted = true
-                splitStartDate[YEAR_ELEMENT].toInt() == currentYear -> {
-                    when {
-                        splitStartDate[MONTH_ELEMENT] == "??" -> hasStarted = false
-                        splitStartDate[MONTH_ELEMENT].toInt() > currentMonth -> hasStarted = false
-                        splitStartDate[MONTH_ELEMENT].toInt() < currentMonth -> hasStarted = true
-                        splitStartDate[MONTH_ELEMENT].toInt() == currentMonth -> {
-                            when {
-                                splitStartDate[DAY_ELEMENT] == "??" -> hasStarted = false
-                                splitStartDate[DAY_ELEMENT].toInt() > currentDay -> hasStarted = false
-                                splitStartDate[DAY_ELEMENT].toInt() < currentDay -> hasStarted = true
-                                splitStartDate[DAY_ELEMENT].toInt() == currentDay -> hasStarted = true
-                            }
-                        }
-                    }
-                }
-            }
-
-            val splitEndDate = endDate.split('.')
-
-            if (splitEndDate.size == 3) {
-                when {
-                    splitEndDate[YEAR_ELEMENT].toInt() > currentYear -> hasEnded = false
-                    splitEndDate[YEAR_ELEMENT].toInt() < currentYear -> hasEnded = true
-                    splitEndDate[YEAR_ELEMENT].toInt() == currentYear -> {
-                        when {
-                            splitEndDate[MONTH_ELEMENT] == "??" -> hasEnded = false
-                            splitEndDate[MONTH_ELEMENT].toInt() > currentMonth -> hasEnded = false
-                            splitEndDate[MONTH_ELEMENT].toInt() < currentMonth -> hasEnded = true
-                            splitEndDate[MONTH_ELEMENT].toInt() == currentMonth -> {
-                                when {
-                                    splitEndDate[DAY_ELEMENT] == "??" -> hasEnded = false
-                                    splitEndDate[DAY_ELEMENT].toInt() > currentDay -> hasEnded = false
-                                    splitEndDate[DAY_ELEMENT].toInt() < currentDay -> hasEnded = true
-                                    splitEndDate[DAY_ELEMENT].toInt() == currentDay -> hasEnded = true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return when {
-                hasEnded -> FINISHED
-                !hasStarted -> UPCOMING
-                hasStarted && !hasEnded -> ONGOING
-                else -> throw IllegalStateException("Unable to determine correct case for [startdate=$startDate, endDate=$endDate]")
-            }
-        }
-
-        val datePublished = releaseCell.select("span[itemprop=datePublished]").text()
-        val splitDatePublished = datePublished.split('.')
-
-        if (datePublished.isNotBlank()) {
-            return mapStatusToSimpleReleaseDate(
-                day = splitDatePublished[DAY_ELEMENT],
-                month = splitDatePublished[MONTH_ELEMENT],
-                year = splitDatePublished[YEAR_ELEMENT]
+        if (isTimePeriod && startDateAttr.isNotBlank()) {
+            val startDateMatch = dateFormat.find(startDateAttr)!!
+            val startDate = LocalDate.of(
+                startDateMatch.groups["year"]!!.value.toInt(),
+                startDateMatch.groups["month"]!!.value.toInt(),
+                startDateMatch.groups["day"]!!.value.toInt(),
             )
-        }
 
-        val pureText = releaseCell.text().trim()
-
-        if (pureText.isNotBlank()) {
-            val dateFormatRegex = Regex(".{2}\\..{2}\\..{4}")
-            return when {
-                pureText == "?" -> Status.UNKNOWN
-                dateFormatRegex.containsMatchIn(pureText) -> {
-                    val splitPureText = dateFormatRegex.find(pureText)!!.value.split('.')
-                    mapStatusToSimpleReleaseDate(
-                        day = splitPureText[DAY_ELEMENT],
-                        month = splitPureText[MONTH_ELEMENT],
-                        year = splitPureText[YEAR_ELEMENT]
-                    )
-                }
-                else -> throw IllegalStateException("Unable to determine correct case for [pureText=$pureText]")
+            val endDate = if (endDateAttr.isNotBlank()) {
+                val endDateMatch = dateFormat.find(endDateAttr)!!
+                LocalDate.of(
+                    endDateMatch.groups["year"]!!.value.toInt(),
+                    endDateMatch.groups["month"]!!.value.toInt(),
+                    endDateMatch.groups["day"]!!.value.toInt(),
+                )
+            } else {
+                currentDate.plusMonths(1)
             }
+
+            return releaseDateToStatus(startDate, endDate)
         }
 
-        throw IllegalStateException("Unknown status [endDate=$endDate, datePublished=$datePublished, pureText=$pureText]")
+        val datePublishedAttr = releaseCell.select("span[itemprop=datePublished]").attr("content").trim()
+        val isDatePublished = datePublishedAttr.isNotBlank()
+
+        if (isDatePublished) {
+            val startDateMatch = dateFormat.find(datePublishedAttr)!!
+            val startDate = LocalDate.of(
+                startDateMatch.groups["year"]!!.value.toInt(),
+                startDateMatch.groups["month"]!!.value.toInt(),
+                startDateMatch.groups["day"]!!.value.toInt(),
+            )
+            return releaseDateToStatus(startDate)
+        }
+
+        return Status.UNKNOWN
     }
 
-    private fun mapStatusToSimpleReleaseDate(day: String, month: String, year: String): Status {
-        val exceptionMessage = "Unable to determine correct case for [day=$day, month=$month, year=$year]"
+    private fun releaseDateToStatus(startDate: LocalDate, endDate: LocalDate = startDate): Status {
+        if (startDate != endDate) {
+            return when {
+                endDate.isBefore(currentDate) -> FINISHED
+                startDate.isBefore(currentDate) && endDate.isAfter(currentDate) -> ONGOING
+                else -> UPCOMING
+            }
+        }
 
         return when {
-            year.toInt() > currentYear -> UPCOMING
-            year.toInt() < currentYear -> FINISHED
-            year.toInt() == currentYear -> {
-                when {
-                    month == "??" -> UPCOMING
-                    month.toInt() > currentMonth -> UPCOMING
-                    month.toInt() < currentMonth -> FINISHED
-                    month.toInt() == currentMonth -> {
-                        when {
-                            day == "??" -> UPCOMING
-                            day.toInt() > currentDay -> UPCOMING
-                            day.toInt() < currentDay -> FINISHED
-                            day.toInt() == currentDay -> ONGOING
-                            else -> throw IllegalStateException(exceptionMessage)
-                        }
-                    }
-                    else -> throw IllegalStateException(exceptionMessage)
-                }
-            }
-            else -> throw IllegalStateException(exceptionMessage)
+            startDate.isBefore(currentDate) -> FINISHED
+            startDate.isAfter(currentDate) -> UPCOMING
+            else -> ONGOING
         }
     }
 
@@ -336,8 +274,5 @@ public class AnidbConverter(
         private const val EU_CDN = "https://cdn-eu.anidb.net"
         private const val US_CDN = "https://cdn-us.anidb.net"
         private const val CDN = "https://cdn.anidb.net"
-        private const val DAY_ELEMENT = 0
-        private const val MONTH_ELEMENT = 1
-        private const val YEAR_ELEMENT = 2
     }
 }

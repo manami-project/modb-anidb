@@ -608,12 +608,12 @@ internal class AnidbConverterTest {
     @Nested
     inner class StatusTests {
 
-        private val fixedClock = Clock.fixed(Instant.parse("2019-11-17T15:00:00.00Z"), UTC)
-
         @Test
-        fun `'03-01-1999 till 28-03-1999' on startDate and endDate is mapped to FINISHED`() {
+        fun `FINISHED by date published`() {
             runBlocking {
                 // given
+                val fixedClock = Clock.fixed(Instant.parse("2019-11-17T15:00:00.00Z"), UTC)
+
                 val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
                     override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
                     override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
@@ -621,7 +621,7 @@ internal class AnidbConverterTest {
                 }
 
                 val testFile =
-                    loadTestResource("file_converter_tests/status/finished_endDate_03-01-1999_till_28-03-1999.html")
+                    loadTestResource("file_converter_tests/status/date_published.html")
 
                 val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
@@ -634,97 +634,11 @@ internal class AnidbConverterTest {
         }
 
         @Test
-        fun `'29-06-1990' on datePublished is mapped to FINISHED`() {
+        fun `ONGOING by date published`() {
             runBlocking {
                 // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
+                val fixedClock = Clock.fixed(Instant.parse("2013-06-13T15:00:00.00Z"), UTC)
 
-                val testFile = loadTestResource("file_converter_tests/status/finished_datePublished_29-06-1990.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(FINISHED)
-            }
-        }
-
-        @Test
-        fun `'29-06-2019' on datePublished is mapped to FINISHED`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile = loadTestResource("file_converter_tests/status/finished_datePublished_29-06-2019.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(FINISHED)
-            }
-        }
-
-        @Test
-        fun `'31-07-2019' on endDate is mapped to FINISHED`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile = loadTestResource("file_converter_tests/status/finished_endDate_31-07-2019.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(FINISHED)
-            }
-        }
-
-        @Test
-        fun `'08-11-2019' on datePublished is mapped to FINISHED`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile = loadTestResource("file_converter_tests/status/finished_datePublished_08-11-2019.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(FINISHED)
-            }
-        }
-
-        @Test
-        fun `'16-05-2014 till 16-08-2019' on endDate is mapped to FINISHED`() {
-            runBlocking {
-                // given
                 val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
                     override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
                     override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
@@ -732,209 +646,7 @@ internal class AnidbConverterTest {
                 }
 
                 val testFile =
-                    loadTestResource("file_converter_tests/status/finished_endDate_16-05-2014_till_16-08-2019.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(FINISHED)
-            }
-        }
-
-        @Test
-        fun `'17-11-2016 till 03-11-2019' on endDate is mapped to FINISHED`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile =
-                    loadTestResource("file_converter_tests/status/finished_endDate_17-11-2016_till_03-11-2019.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(FINISHED)
-            }
-        }
-
-        @Test
-        fun `'2024' on datePublished is mapped to UPCOMING`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile = loadTestResource("file_converter_tests/status/upcoming_datePublished_2024.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(UPCOMING)
-            }
-        }
-
-        @Test
-        fun `'2021 till unknown' on startDate and endDate is mapped to UPCOMING`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile = loadTestResource("file_converter_tests/status/upcoming_startDate_2021_till_unknown.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(UPCOMING)
-            }
-        }
-
-        @Test
-        fun `'2019' on datePublished is mapped to UPCOMING`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile = loadTestResource("file_converter_tests/status/upcoming_datePublished_2019.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(UPCOMING)
-            }
-        }
-
-        @Test
-        fun `'2024' on startDate is mapped to UPCOMING`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile = loadTestResource("file_converter_tests/status/upcoming_startDate_2024.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(UPCOMING)
-            }
-        }
-
-        @Test
-        fun `'29-11-2019 till unknown' on startDate is mapped to UPCOMING`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile =
-                    loadTestResource("file_converter_tests/status/upcoming_startDate_29-11-2019_till_unknown.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(UPCOMING)
-            }
-        }
-
-        @Test
-        fun `'13-12-2019' on datePublished is mapped to UPCOMING`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile = loadTestResource("file_converter_tests/status/upcoming_datePublished_13-12-2019.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(UPCOMING)
-            }
-        }
-
-        @Test
-        fun `'23-11-2019 till unknown' on startDate is mapped to UPCOMING`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile =
-                    loadTestResource("file_converter_tests/status/upcoming_startDate_23-11-2019_till_unknown.html")
-
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(UPCOMING)
-            }
-        }
-
-        @Test
-        fun `'01-11-2019 till 03-04-2020' on endDate is mapped to CURRENTLY`() {
-            runBlocking {
-                // given
-                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
-                }
-
-                val testFile =
-                    loadTestResource("file_converter_tests/status/currently_endDate_01-11-2019_till_03-04-2020.html")
+                    loadTestResource("file_converter_tests/status/date_published.html")
 
                 val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
@@ -947,9 +659,11 @@ internal class AnidbConverterTest {
         }
 
         @Test
-        fun `'17-11-2019 till unknown' on startDate is mapped to CURRENTLY`() {
+        fun `UPCOMING by date published`() {
             runBlocking {
                 // given
+                val fixedClock = Clock.fixed(Instant.parse("2012-11-17T15:00:00.00Z"), UTC)
+
                 val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
                     override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
                     override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
@@ -957,22 +671,24 @@ internal class AnidbConverterTest {
                 }
 
                 val testFile =
-                    loadTestResource("file_converter_tests/status/currently_startDate_17-11-2019_till_unknown.html")
+                    loadTestResource("file_converter_tests/status/date_published.html")
 
-                val converter = AnidbConverter(testAnidbConfig)
+                val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
                 // when
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.status).isEqualTo(ONGOING)
+                assertThat(result.status).isEqualTo(UPCOMING)
             }
         }
 
         @Test
-        fun `'08-10-2019 till 24-12-2019' on endDate is mapped to CURRENTLY`() {
+        fun `FINISHED by start to end`() {
             runBlocking {
                 // given
+                val fixedClock = Clock.fixed(Instant.parse("2019-11-17T15:00:00.00Z"), UTC)
+
                 val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
                     override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
                     override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
@@ -980,7 +696,32 @@ internal class AnidbConverterTest {
                 }
 
                 val testFile =
-                    loadTestResource("file_converter_tests/status/currently_endDate_08-10-2019_till_24-12-2019.html")
+                    loadTestResource("file_converter_tests/status/start_to_end.html")
+
+                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+
+                // when
+                val result = converter.convert(testFile)
+
+                // then
+                assertThat(result.status).isEqualTo(FINISHED)
+            }
+        }
+
+        @Test
+        fun `ONGOING by start to end`() {
+            runBlocking {
+                // given
+                val fixedClock = Clock.fixed(Instant.parse("2006-05-17T15:00:00.00Z"), UTC)
+
+                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
+                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
+                }
+
+                val testFile =
+                    loadTestResource("file_converter_tests/status/start_to_end.html")
 
                 val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
@@ -993,9 +734,11 @@ internal class AnidbConverterTest {
         }
 
         @Test
-        fun `'07-12-2013 till unknown' on endDate is mapped to CURRENTLY`() {
+        fun `UPCOMING by start to end`() {
             runBlocking {
                 // given
+                val fixedClock = Clock.fixed(Instant.parse("2005-11-17T15:00:00.00Z"), UTC)
+
                 val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
                     override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
                     override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
@@ -1003,7 +746,32 @@ internal class AnidbConverterTest {
                 }
 
                 val testFile =
-                    loadTestResource("file_converter_tests/status/currently_endDate_07-12-2013_till_unknown.html")
+                    loadTestResource("file_converter_tests/status/start_to_end.html")
+
+                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+
+                // when
+                val result = converter.convert(testFile)
+
+                // then
+                assertThat(result.status).isEqualTo(UPCOMING)
+            }
+        }
+
+        @Test
+        fun `ONGOING by start to unknown`() {
+            runBlocking {
+                // given
+                val fixedClock = Clock.fixed(Instant.parse("2023-10-17T15:00:00.00Z"), UTC)
+
+                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
+                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
+                }
+
+                val testFile =
+                    loadTestResource("file_converter_tests/status/start_to_unknown.html")
 
                 val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
@@ -1016,16 +784,44 @@ internal class AnidbConverterTest {
         }
 
         @Test
-        fun `question mark is mapped to UNKNOWN`() {
+        fun `UPCOMING by start to unknown`() {
             runBlocking {
                 // given
+                val fixedClock = Clock.fixed(Instant.parse("2022-10-17T15:00:00.00Z"), UTC)
+
                 val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
                     override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
                     override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/status/unknown.html")
+                val testFile =
+                    loadTestResource("file_converter_tests/status/start_to_unknown.html")
+
+                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+
+                // when
+                val result = converter.convert(testFile)
+
+                // then
+                assertThat(result.status).isEqualTo(UPCOMING)
+            }
+        }
+
+        @Test
+        fun `Neither time period nor date published is mapped to UNKNOWN`() {
+            runBlocking {
+                // given
+                val fixedClock = Clock.fixed(Instant.parse("2019-11-17T15:00:00.00Z"), UTC)
+
+                val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                    override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+                    override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
+                    override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
+                }
+
+                val testFile =
+                    loadTestResource("file_converter_tests/status/unknown.html")
 
                 val converter = AnidbConverter(testAnidbConfig, fixedClock)
 
@@ -1362,8 +1158,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile =
-                        loadTestResource("file_converter_tests/anime_season/year_of_premiere/2017-10-14_-_2020.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2017-10-14_-_2020.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1385,8 +1180,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile =
-                        loadTestResource("file_converter_tests/anime_season/year_of_premiere/2019-10-05_-_2020-03.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2019-10-05_-_2020-03.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1452,8 +1246,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile =
-                        loadTestResource("file_converter_tests/anime_season/year_of_premiere/2020_-_unknown.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/2020_-_unknown.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1475,8 +1268,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile =
-                        loadTestResource("file_converter_tests/anime_season/year_of_premiere/not_available.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/not_available.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1498,8 +1290,7 @@ internal class AnidbConverterTest {
                         override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                     }
 
-                    val testFile =
-                        loadTestResource("file_converter_tests/anime_season/year_of_premiere/unknown_date_of_year_-_unknown.html")
+                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/unknown_date_of_year_-_unknown.html")
 
                     val converter = AnidbConverter(testAnidbConfig)
 
@@ -1508,6 +1299,28 @@ internal class AnidbConverterTest {
 
                     // then
                     assertThat(result.animeSeason.year).isEqualTo(2021)
+                }
+            }
+
+            @Test
+            fun `time period but using date published`() {
+                runBlocking {
+                    // given
+                    val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                        override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+                        override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
+                        override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
+                    }
+
+                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/date_published_but_with_time_period.html")
+
+                    val converter = AnidbConverter(testAnidbConfig)
+
+                    // when
+                    val result = converter.convert(testFile)
+
+                    // then
+                    assertThat(result.animeSeason.year).isEqualTo(2014)
                 }
             }
         }
