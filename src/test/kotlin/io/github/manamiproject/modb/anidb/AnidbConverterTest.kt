@@ -13,6 +13,8 @@ import io.github.manamiproject.modb.test.loadTestResource
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import kotlin.test.Test
 import java.net.URI
 import java.time.Clock
@@ -1329,7 +1331,7 @@ internal class AnidbConverterTest {
         inner class SeasonTests {
 
             @Nested
-            inner class DatePublishedTests {
+            inner class SeasonCellTests {
 
                 @Test
                 fun `season is 'spring'`() {
@@ -1342,7 +1344,7 @@ internal class AnidbConverterTest {
                         }
 
                         val testFile =
-                            loadTestResource("file_converter_tests/anime_season/season/datePublished_spring.html")
+                            loadTestResource("file_converter_tests/anime_season/season/season_cell_spring.html")
 
                         val converter = AnidbConverter(testAnidbConfig)
 
@@ -1365,7 +1367,7 @@ internal class AnidbConverterTest {
                         }
 
                         val testFile =
-                            loadTestResource("file_converter_tests/anime_season/season/datePublished_summer.html")
+                            loadTestResource("file_converter_tests/anime_season/season/season_cell_summer.html")
 
                         val converter = AnidbConverter(testAnidbConfig)
 
@@ -1388,7 +1390,7 @@ internal class AnidbConverterTest {
                         }
 
                         val testFile =
-                            loadTestResource("file_converter_tests/anime_season/season/datePublished_fall.html")
+                            loadTestResource("file_converter_tests/anime_season/season/season_cell_autumn.html")
 
                         val converter = AnidbConverter(testAnidbConfig)
 
@@ -1411,7 +1413,7 @@ internal class AnidbConverterTest {
                         }
 
                         val testFile =
-                            loadTestResource("file_converter_tests/anime_season/season/datePublished_winter.html")
+                            loadTestResource("file_converter_tests/anime_season/season/season_cell_winter.html")
 
                         val converter = AnidbConverter(testAnidbConfig)
 
@@ -1425,10 +1427,11 @@ internal class AnidbConverterTest {
             }
 
             @Nested
-            inner class StartDateTests {
+            inner class DatePublishedCellTests {
 
-                @Test
-                fun `season is 'spring'`() {
+                @ParameterizedTest
+                @ValueSource(strings = ["date_published_cell_apr", "date_published_cell_may", "date_published_cell_jun"])
+                fun `season is 'spring'`(file: String) {
                     runBlocking {
                         // given
                         val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -1438,7 +1441,7 @@ internal class AnidbConverterTest {
                         }
 
                         val testFile =
-                            loadTestResource("file_converter_tests/anime_season/season/startDate_spring.html")
+                            loadTestResource("file_converter_tests/anime_season/season/$file.html")
 
                         val converter = AnidbConverter(testAnidbConfig)
 
@@ -1450,8 +1453,9 @@ internal class AnidbConverterTest {
                     }
                 }
 
-                @Test
-                fun `season is 'summer'`() {
+                @ParameterizedTest
+                @ValueSource(strings = ["date_published_cell_jul", "date_published_cell_aug", "date_published_cell_sep"])
+                fun `season is 'summer'`(file: String) {
                     runBlocking {
                         // given
                         val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -1461,7 +1465,7 @@ internal class AnidbConverterTest {
                         }
 
                         val testFile =
-                            loadTestResource("file_converter_tests/anime_season/season/startDate_summer.html")
+                            loadTestResource("file_converter_tests/anime_season/season/$file.html")
 
                         val converter = AnidbConverter(testAnidbConfig)
 
@@ -1473,8 +1477,9 @@ internal class AnidbConverterTest {
                     }
                 }
 
-                @Test
-                fun `season is 'fall'`() {
+                @ParameterizedTest
+                @ValueSource(strings = ["date_published_cell_oct", "date_published_cell_nov", "date_published_cell_dec"])
+                fun `season is 'fall'`(file: String) {
                     runBlocking {
                         // given
                         val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -1483,7 +1488,7 @@ internal class AnidbConverterTest {
                             override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                         }
 
-                        val testFile = loadTestResource("file_converter_tests/anime_season/season/startDate_fall.html")
+                        val testFile = loadTestResource("file_converter_tests/anime_season/season/$file.html")
 
                         val converter = AnidbConverter(testAnidbConfig)
 
@@ -1495,8 +1500,9 @@ internal class AnidbConverterTest {
                     }
                 }
 
-                @Test
-                fun `season is 'winter'`() {
+                @ParameterizedTest
+                @ValueSource(strings = ["date_published_cell_jan", "date_published_cell_feb", "date_published_cell_mar"])
+                fun `season is 'winter'`(file: String) {
                     runBlocking {
                         // given
                         val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -1506,7 +1512,106 @@ internal class AnidbConverterTest {
                         }
 
                         val testFile =
-                            loadTestResource("file_converter_tests/anime_season/season/startDate_winter.html")
+                            loadTestResource("file_converter_tests/anime_season/season/$file.html")
+
+                        val converter = AnidbConverter(testAnidbConfig)
+
+                        // when
+                        val result = converter.convert(testFile)
+
+                        // then
+                        assertThat(result.animeSeason.season).isEqualTo(WINTER)
+                    }
+                }
+            }
+
+            @Nested
+            inner class StartDateCellTests {
+
+                @ParameterizedTest
+                @ValueSource(strings = ["start_date_cell_apr", "start_date_cell_may", "start_date_cell_jun"])
+                fun `season is 'spring'`(file: String) {
+                    runBlocking {
+                        // given
+                        val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+                            override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
+                            override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
+                        }
+
+                        val testFile =
+                            loadTestResource("file_converter_tests/anime_season/season/$file.html")
+
+                        val converter = AnidbConverter(testAnidbConfig)
+
+                        // when
+                        val result = converter.convert(testFile)
+
+                        // then
+                        assertThat(result.animeSeason.season).isEqualTo(SPRING)
+                    }
+                }
+
+                @ParameterizedTest
+                @ValueSource(strings = ["start_date_cell_jul", "start_date_cell_aug", "start_date_cell_sep"])
+                fun `season is 'summer'`(file: String) {
+                    runBlocking {
+                        // given
+                        val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+                            override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
+                            override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
+                        }
+
+                        val testFile =
+                            loadTestResource("file_converter_tests/anime_season/season/$file.html")
+
+                        val converter = AnidbConverter(testAnidbConfig)
+
+                        // when
+                        val result = converter.convert(testFile)
+
+                        // then
+                        assertThat(result.animeSeason.season).isEqualTo(SUMMER)
+                    }
+                }
+
+                @ParameterizedTest
+                @ValueSource(strings = ["start_date_cell_oct", "start_date_cell_nov", "start_date_cell_dec"])
+                fun `season is 'fall'`(file: String) {
+                    runBlocking {
+                        // given
+                        val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+                            override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
+                            override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
+                        }
+
+                        val testFile = loadTestResource("file_converter_tests/anime_season/season/$file.html")
+
+                        val converter = AnidbConverter(testAnidbConfig)
+
+                        // when
+                        val result = converter.convert(testFile)
+
+                        // then
+                        assertThat(result.animeSeason.season).isEqualTo(FALL)
+                    }
+                }
+
+                @ParameterizedTest
+                @ValueSource(strings = ["start_date_cell_jan", "start_date_cell_feb", "start_date_cell_mar"])
+                fun `season is 'winter'`(file: String) {
+                    runBlocking {
+                        // given
+                        val testAnidbConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                            override fun buildAnimeLink(id: AnimeId): URI = AnidbConfig.buildAnimeLink(id)
+                            override fun buildDataDownloadLink(id: String): URI = AnidbConfig.buildDataDownloadLink(id)
+                            override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
+                        }
+
+                        val testFile =
+                            loadTestResource("file_converter_tests/anime_season/season/$file.html")
 
                         val converter = AnidbConverter(testAnidbConfig)
 

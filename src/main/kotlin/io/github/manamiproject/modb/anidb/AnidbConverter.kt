@@ -166,10 +166,8 @@ public class AnidbConverter(
         val endDateAttr = releaseCell.select("span[itemprop=endDate]").attr("content").trim()
         val isTimePeriod = releaseCell.text().trim().contains("until")
 
-        val dateFormat = Regex("(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})")
-
         if (isTimePeriod && startDateAttr.isNotBlank()) {
-            val startDateMatch = dateFormat.find(startDateAttr)!!
+            val startDateMatch = DATEFORMAT.find(startDateAttr)!!
             val startDate = LocalDate.of(
                 startDateMatch.groups["year"]!!.value.toInt(),
                 startDateMatch.groups["month"]!!.value.toInt(),
@@ -177,7 +175,7 @@ public class AnidbConverter(
             )
 
             val endDate = if (endDateAttr.isNotBlank()) {
-                val endDateMatch = dateFormat.find(endDateAttr)!!
+                val endDateMatch = DATEFORMAT.find(endDateAttr)!!
                 LocalDate.of(
                     endDateMatch.groups["year"]!!.value.toInt(),
                     endDateMatch.groups["month"]!!.value.toInt(),
@@ -194,7 +192,7 @@ public class AnidbConverter(
         val isDatePublished = datePublishedAttr.isNotBlank()
 
         if (isDatePublished) {
-            val startDateMatch = dateFormat.find(datePublishedAttr)!!
+            val startDateMatch = DATEFORMAT.find(datePublishedAttr)!!
             val startDate = LocalDate.of(
                 startDateMatch.groups["year"]!!.value.toInt(),
                 startDateMatch.groups["month"]!!.value.toInt(),
@@ -236,24 +234,52 @@ public class AnidbConverter(
     }
 
     private fun extractAnimeSeason(document: Document): AnimeSeason {
-        var cellTextContainingYear = document.select("span[itemprop=startDate]").text()
+        val seasonCell = document.select("tr[class=season]").select("td[class=value]").text().trim()
 
-        if (cellTextContainingYear.isBlank()) {
-           cellTextContainingYear = document.select("span[itemprop=datePublished]").text()
+        if (seasonCell.isNotBlank()) {
+            val seasonNameFormat = Regex("[aA-zZ]+")
+            val season = when (seasonNameFormat.find(seasonCell)?.value?.lowercase() ?: EMPTY) {
+                "winter" -> WINTER
+                "spring" -> SPRING
+                "summer" -> SUMMER
+                "autumn" -> FALL
+                else -> UNDEFINED
+            }
+
+            val winterSeasonYearFormat = Regex("\\d+/\\d+")
+            val defaultSeasonYearFormat = Regex("\\d{4}")
+
+            val year = if (winterSeasonYearFormat.containsMatchIn(seasonCell)) {
+                winterSeasonYearFormat.find(seasonCell)?.value?.trim()?.split('/')?.get(0)?.toInt()?.plus(1) ?: 0
+            } else {
+                defaultSeasonYearFormat.find(seasonCell)?.value?.trim()?.toInt() ?: 0
+            }
+
+            return AnimeSeason(
+                season = season,
+                year = year,
+            )
         }
 
-        val month = Regex("\\.\\d{2}\\.").find(cellTextContainingYear)?.value
-            ?.replace(Regex("\\."), EMPTY)
-            ?.let {
-                return@let if (it.startsWith('0')) {
-                    it.trimStart('0').toInt()
-                } else {
-                    it.toInt()
-                }
-            } ?: 0
-        val year = Regex("\\d{4}").find(cellTextContainingYear)?.value?.toInt() ?: 0
+        val releaseCell = document.selectFirst("tr.year > td.value")!!
+        var cellTextContainingDate = releaseCell.select("span[itemprop=startDate]").attr("content").trim()
 
-        val season = when(month) {
+        if (cellTextContainingDate.isBlank()) {
+            cellTextContainingDate = releaseCell.select("span[itemprop=datePublished]").attr("content").trim()
+        }
+
+        if (cellTextContainingDate.isBlank()) {
+            return AnimeSeason(UNDEFINED)
+        }
+
+        val startDateMatch = DATEFORMAT.find(cellTextContainingDate)!!
+        val date = LocalDate.of(
+            startDateMatch.groups["year"]!!.value.toInt(),
+            startDateMatch.groups["month"]!!.value.toInt(),
+            startDateMatch.groups["day"]!!.value.toInt(),
+        )
+
+        val season = when(date.month.value) {
             1, 2, 3 -> WINTER
             4, 5, 6 -> SPRING
             7, 8, 9 -> SUMMER
@@ -263,7 +289,7 @@ public class AnidbConverter(
 
         return AnimeSeason(
             season = season,
-            year = year
+            year = date.year,
         )
     }
 
@@ -274,5 +300,6 @@ public class AnidbConverter(
         private const val EU_CDN = "https://cdn-eu.anidb.net"
         private const val US_CDN = "https://cdn-us.anidb.net"
         private const val CDN = "https://cdn.anidb.net"
+        private val DATEFORMAT = Regex("(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})")
     }
 }
