@@ -134,7 +134,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
             get(urlPathEqualTo("/anime/$id")).willReturn(
                 aResponse()
                     .withHeader("Content-Type", "text/html")
-                    .withStatus(502)
+                    .withStatus(402)
                     .withBody("<html></html>")
             )
         )
@@ -147,7 +147,7 @@ internal class AnidbDownloaderTest : MockServerTestCase<WireMockServer> by WireM
         }
 
         // then
-        assertThat(result).hasMessage("Unexpected response code [anidbId=$id], [responseCode=502]")
+        assertThat(result).hasMessage("Unexpected response code [anidbId=$id], [responseCode=402]")
     }
 
     @Test
