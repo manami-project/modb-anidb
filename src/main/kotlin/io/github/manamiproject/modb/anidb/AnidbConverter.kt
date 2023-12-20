@@ -112,7 +112,7 @@ public class AnidbConverter(
 
     private fun extractThumbnail(picture: URI): URI {
         return if (picture == NO_PIC) {
-            NO_PIC
+            URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png")
         } else {
             URI("$picture-thumb.jpg")
         }
@@ -296,7 +296,7 @@ public class AnidbConverter(
     private fun extractTags(document: Document): List<Tag> = document.select("span[itemprop=genre]").map { it.text() }
 
     private companion object {
-        private val NO_PIC = URI("https://cdn.myanimelist.net/images/qm_50.gif")
+        private val NO_PIC = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png")
         private const val EU_CDN = "https://cdn-eu.anidb.net"
         private const val US_CDN = "https://cdn-us.anidb.net"
         private const val CDN = "https://cdn.anidb.net"
