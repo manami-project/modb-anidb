@@ -24,9 +24,9 @@ public class AnidbDownloader(
     override suspend fun download(id: AnimeId, onDeadEntry: suspend (AnimeId) -> Unit): String = withContext(LIMITED_NETWORK) {
         val response = httpClient.get(config.buildDataDownloadLink(id).toURL())
 
-        check(response.body.isNotBlank()) { "Response body was blank for [anidbId=$id] with response code [${response.code}]" }
+        check(response.bodyAsText.isNotBlank()) { "Response body was blank for [anidbId=$id] with response code [${response.code}]" }
 
-        val responseChecker = AnidbResponseChecker(response.body).apply {
+        val responseChecker = AnidbResponseChecker(response.bodyAsText).apply {
             checkIfCrawlerIsDetected()
         }
 
@@ -39,7 +39,7 @@ public class AnidbDownloader(
                 EMPTY
             }
             responseChecker.isAdditionPending() -> EMPTY
-            else -> response.body
+            else -> response.bodyAsText
         }
     }
 
