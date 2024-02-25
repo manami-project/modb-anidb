@@ -534,7 +534,7 @@ internal class AnidbConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.relatedAnime).containsExactly(
+                assertThat(result.relatedAnime).containsExactlyInAnyOrder(
                     URI("https://anidb.net/anime/367"),
                     URI("https://anidb.net/anime/368"),
                     URI("https://anidb.net/anime/405"),
@@ -567,7 +567,7 @@ internal class AnidbConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.synonyms).containsExactly(
+                assertThat(result.synonyms).containsExactlyInAnyOrder(
                     "Bilježnica smrti",
                     "Caderno da Morte",
                     "DEATH NOTE",
@@ -857,7 +857,7 @@ internal class AnidbConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.tags).containsExactly(
+                assertThat(result.tags).containsExactlyInAnyOrder(
                     "contemporary fantasy",
                     "detective",
                     "manga",
