@@ -4,7 +4,12 @@ import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extractor.DataExtractor
+import io.github.manamiproject.modb.core.extractor.ExtractionResult
+import io.github.manamiproject.modb.core.extractor.XmlDataExtractor
 import io.github.manamiproject.modb.core.models.*
+import io.github.manamiproject.modb.core.models.Anime.Companion.NO_PICTURE
+import io.github.manamiproject.modb.core.models.Anime.Companion.NO_PICTURE_THUMBNAIL
 import io.github.manamiproject.modb.core.models.Anime.Status
 import io.github.manamiproject.modb.core.models.Anime.Status.*
 import io.github.manamiproject.modb.core.models.Anime.Type
@@ -12,10 +17,7 @@ import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.MINUTES
-import io.github.manamiproject.modb.core.parseHtml
 import kotlinx.coroutines.withContext
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
 import java.net.URI
 import java.time.Clock
 import java.time.LocalDate
@@ -28,60 +30,76 @@ import java.time.LocalDate
  */
 public class AnidbConverter(
     private val config: MetaDataProviderConfig = AnidbConfig,
+    private val extractor: DataExtractor = XmlDataExtractor,
     clock: Clock = Clock.systemDefaultZone(),
 ) : AnimeConverter {
 
     private val currentDate = LocalDate.now(clock)
 
     override suspend fun convert(rawContent: String): Anime = withContext(LIMITED_CPU) {
-        val document = parseHtml(rawContent)
+        val data = extractor.extract(rawContent, mapOf(
+            "title" to "//h1[contains(@class, 'anime')]/text()",
+            "episodesString" to "//span[contains(@itemprop, 'numberOfEpisodes')]/text()",
+            "episodesTypeCell" to "//tr[contains(@class, 'type')]/td[contains(@class, 'value')]/text()",
+            "tags" to "//span[contains(@itemprop, 'genre')]/text()",
+            "image" to "//img[contains(@itemprop, 'image')]/@src",
+            "source" to "//input[contains(@type, 'hidden')][contains(@name, 'aid')]/@value",
+            "type" to "//tr[contains(@class, 'type')]//th[contains(text(), 'Type')]/following-sibling::*/text()",
+            "duration" to "//table[contains(@id, 'eplist')]/tbody/tr//td[contains(@class, 'duration')]/text()",
+            "season" to "//tr[contains(@class, 'season')]//td[contains(@class, 'value')]/text()",
+            "startDate" to "//tr[contains(@class, 'year')]//td[contains(@class, 'value')]//span[contains(@itemprop, 'startDate')]/@content",
+            "datePublished" to "//tr[contains(@class, 'year')]//td[contains(@class, 'value')]//span[contains(@itemprop, 'datePublished')]/@content",
+            "relatedAnime" to "//div[contains(@class, 'directly_related')]//a/@href",
+            "alternateNames" to "//label[contains(@itemprop, 'alternateName')]/text()",
+            "synonymsList" to "//div[contains(@class, 'titles')]//tr[contains(@class, 'syn')]/td/text()",
+            "shortNames" to "//div[contains(@class, 'titles')]//tr[contains(@class, 'short')]/td/text()",
+            "startDateAttr" to "//span[contains(@itemprop, 'startDate')]/@content",
+            "endDateAttr" to "//span[contains(@itemprop, 'endDate')]/@content",
+            "isTimePeriod" to "//tr[contains(@class, 'year')]/td[contains(@class, 'value')]/text()",
+            "datePublishedAttr" to "//span[contains(@itemprop, 'datePublished')]/@content",
+        ))
 
-        val picture = extractPicture(document)
+        val picture = extractPicture(data)
 
         return@withContext Anime(
-            _title = extractTitle(document),
-            episodes = extractEpisodes(document),
-            type = extractType(document),
+            _title = extractTitle(data),
+            episodes = extractEpisodes(data),
+            type = extractType(data),
             picture = picture,
             thumbnail = extractThumbnail(picture),
-            status = extractStatus(document),
-            duration = extractDuration(document),
-            animeSeason = extractAnimeSeason(document),
-        ).apply {
-            addSources(extractSourcesEntry(document))
-            addSynonyms(extractSynonyms(document))
-            addRelatedAnime(extractRelatedAnime(document))
-            addTags(extractTags(document))
-        }
+            status = extractStatus(data),
+            duration = extractDuration(data),
+            animeSeason = extractAnimeSeason(data),
+            sources = extractSourcesEntry(data),
+            synonyms = extractSynonyms(data),
+            relatedAnime = extractRelatedAnime(data),
+            tags = extractTags(data),
+        )
     }
 
-    private fun extractTitle(document: Document) = document.select("h1.anime").text().replace("Anime: ", EMPTY)
+    private fun extractTitle(data: ExtractionResult) = data.string("title").replace("Anime: ", EMPTY)
 
-    private fun extractEpisodes(document: Document): Int {
-        val episodesString = document.select("span[itemprop=numberOfEpisodes]").text().trim()
-
-        if (episodesString.isNotBlank()) {
-            return episodesString.toInt()
+    private fun extractEpisodes(data: ExtractionResult): Int {
+        val episodeString = data.stringOrDefault("episodesString").ifBlank {
+            data.stringOrDefault("episodesTypeCell")
         }
 
-        val typeCell = document.select("tr.type > td.value").text().trim()
-
-        return if (typeCell.lowercase().contains("unknown number of episodes")) {
-            0
-        } else {
+        return if (episodeString.isBlank() || episodeString.contains("unknown number of episodes")) {
             1
+        } else {
+            episodeString.toIntOrNull() ?: 1
         }
     }
 
-    private fun extractType(document: Document): Type {
-        val typeCellContent = document.selectFirst("tr.type > td.value")?.text()?.trim() ?: EMPTY
+    private fun extractType(data: ExtractionResult): Type {
+        val typeCellContent = data.stringOrDefault("type")
         val type = if (typeCellContent.contains(',')) {
             typeCellContent.split(',')[0].trim()
         } else {
             typeCellContent.trim()
         }
 
-        return when(type.lowercase()) {
+        return when(type.trimStart('[').trim().lowercase()) {
             "movie" -> MOVIE
             "ova" -> OVA
             "web" -> ONA
@@ -94,8 +112,8 @@ public class AnidbConverter(
         }
     }
 
-    private fun extractPicture(document: Document): URI {
-        val src = document.select("img[itemprop=image]").attr("src").trim()
+    private fun extractPicture(data: ExtractionResult): URI {
+        val src = data.stringOrDefault("image")
 
         return if (src.isNotBlank()) {
             val uri = when {
@@ -106,65 +124,64 @@ public class AnidbConverter(
 
             URI(uri)
         } else {
-            NO_PIC
+            NO_PICTURE
         }
     }
 
     private fun extractThumbnail(picture: URI): URI {
-        return if (picture == NO_PIC) {
-            URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png")
+        return if (picture == NO_PICTURE) {
+            NO_PICTURE_THUMBNAIL
         } else {
             URI("$picture-thumb.jpg")
         }
     }
 
-    private fun extractSynonyms(document: Document): List<Title> {
-        val synonyms = mutableListOf<String>()
+    private fun extractSynonyms(data: ExtractionResult): HashSet<Title> {
+        val synonyms = hashSetOf<Title>()
 
-        val tableFromTitlesTab = document.select("div.titles").select("table")
+        if (!data.notFound("alternateNames")) {
+            data.listNotNull<Title>("alternateNames").forEach { synonyms.add(it) }
+        }
 
-        tableFromTitlesTab.select("label[itemprop=alternateName]").map { it.text() }
-            .map { it.trim() }
-            .forEach { synonyms.add(it) }
+        data.stringOrDefault("synonymsList").split(",").forEach { synonyms.add(it) }
 
-        tableFromTitlesTab.select("tr.syn > td").text().trim().split(", ")
-            .map { it.trim() }
-            .forEach { synonyms.add(it) }
+        if (data.isOfType("shortNames", ArrayList::class) && !data.notFound("shortNames")) {
+            data.listNotNull<Title>("shortNames").forEach { synonyms.add(it) }
+        }
 
-        tableFromTitlesTab.select("tr.short > td").text().trim().split(", ")
-            .map { it.trim() }
-            .forEach { synonyms.add(it) }
+        if (data.isOfType("shortNames", String::class)) {
+            data.stringOrDefault("shortNames").split(",").forEach { synonyms.add(it) }
+        }
 
-        return synonyms.distinct()
+        return synonyms
     }
 
-    private fun extractSourcesEntry(document: Document): List<URI> {
-        val id = document.select("input[type=hidden][name=aid]").first()!!.attr("value").trim()
+    private fun extractSourcesEntry(data: ExtractionResult): HashSet<URI> {
+        val id = data.listNotNull<String>("source").first().trim()
 
         check(id.isNotBlank()) { "Sources link must not be blank" }
 
-        return listOf(config.buildAnimeLink(id))
+        return hashSetOf(config.buildAnimeLink(id))
     }
 
-    private fun extractRelatedAnime(document: Document): List<URI> {
-        val linkElements = document.select("div#tab_main_1_1_pane[class=pane directly_related]")
-            .select("a")
-            .select("a:has(picture)")
-            ?: emptyList<Element>()
+    private fun extractRelatedAnime(data: ExtractionResult): HashSet<URI> {
+        if (data.notFound("relatedAnime")) {
+            return hashSetOf()
+        }
 
-        return linkElements.asSequence()
-            .map { it.attr("href") }
+        return data.listNotNull<String>("relatedAnime")
+            .asSequence()
+            .filterNot { it.contains("relation") }
             .map { it.replace("/anime/", EMPTY) }
             .distinct()
             .map { config.buildAnimeLink(it) }
-            .toList()
+            .toHashSet()
     }
 
-    private fun extractStatus(document: Document): Status {
-        val releaseCell = document.selectFirst("tr.year > td.value")!!
-        val startDateAttr = releaseCell.select("span[itemprop=startDate]").attr("content").trim()
-        val endDateAttr = releaseCell.select("span[itemprop=endDate]").attr("content").trim()
-        val isTimePeriod = releaseCell.text().trim().contains("until")
+    private fun extractStatus(data: ExtractionResult): Status {
+        val startDateAttr = data.stringOrDefault("startDateAttr")
+        val endDateAttr = data.stringOrDefault("endDateAttr")
+        val isTimePeriod = data.stringOrDefault("isTimePeriod").contains("until")
 
         if (isTimePeriod && startDateAttr.isNotBlank()) {
             val startDateMatch = DATEFORMAT.find(startDateAttr)!!
@@ -188,7 +205,7 @@ public class AnidbConverter(
             return releaseDateToStatus(startDate, endDate)
         }
 
-        val datePublishedAttr = releaseCell.select("span[itemprop=datePublished]").attr("content").trim()
+        val datePublishedAttr = data.stringOrDefault("datePublishedAttr").trim()
         val isDatePublished = datePublishedAttr.isNotBlank()
 
         if (isDatePublished) {
@@ -220,25 +237,27 @@ public class AnidbConverter(
         }
     }
 
-    private fun extractDuration(document: Document): Duration {
-        val duration = document.select("table#eplist")
-            .select("tbody")
-            .select("tr")
-            .first()
-            ?.select("td.duration")
-            ?.text()
+    private fun extractDuration(data: ExtractionResult): Duration {
+        if (data.notFound("duration")) {
+            return Duration.UNKNOWN
+        }
+
+        val duration = data.listNotNull<String>("duration")
+            .firstOrNull()
             ?.replace("m", EMPTY)
-            ?.toInt() ?: 0
+            ?.toIntOrNull() ?: 0
 
         return Duration(duration, MINUTES)
     }
 
-    private fun extractAnimeSeason(document: Document): AnimeSeason {
-        val seasonCell = document.select("tr[class=season]").select("td[class=value]").text().trim()
+    private fun extractAnimeSeason(data: ExtractionResult): AnimeSeason {
+        val seasonCell = data.stringOrDefault("season")
+        var year = 0
+        var season = AnimeSeason.Season.UNDEFINED
 
         if (seasonCell.isNotBlank()) {
             val seasonNameFormat = Regex("[aA-zZ]+")
-            val season = when (seasonNameFormat.find(seasonCell)?.value?.lowercase() ?: EMPTY) {
+            season = when (seasonNameFormat.find(seasonCell)?.value?.lowercase() ?: EMPTY) {
                 "winter" -> WINTER
                 "spring" -> SPRING
                 "summer" -> SUMMER
@@ -249,54 +268,80 @@ public class AnidbConverter(
             val winterSeasonYearFormat = Regex("\\d+/\\d+")
             val defaultSeasonYearFormat = Regex("\\d{4}")
 
-            val year = if (winterSeasonYearFormat.containsMatchIn(seasonCell)) {
+            year = if (winterSeasonYearFormat.containsMatchIn(seasonCell)) {
                 winterSeasonYearFormat.find(seasonCell)?.value?.trim()?.split('/')?.get(0)?.toInt()?.plus(1) ?: 0
             } else {
                 defaultSeasonYearFormat.find(seasonCell)?.value?.trim()?.toInt() ?: 0
             }
+        }
 
-            return AnimeSeason(
-                season = season,
-                year = year,
+        // startDate
+        val startDate = data.stringOrDefault("startDate")
+
+        if (startDate.isNotBlank() && (year == 0 || season == UNDEFINED)) {
+            val startDateMatch = DATEFORMAT.find(startDate)!!
+            val date = LocalDate.of(
+                startDateMatch.groups["year"]!!.value.toInt(),
+                startDateMatch.groups["month"]!!.value.toInt(),
+                startDateMatch.groups["day"]!!.value.toInt(),
             )
+
+            if (year == 0) {
+                year = date.year
+            }
+
+            if (season == UNDEFINED) {
+                season = when(date.month.value) {
+                    1, 2, 3 -> WINTER
+                    4, 5, 6 -> SPRING
+                    7, 8, 9 -> SUMMER
+                    10, 11, 12 -> FALL
+                    else -> UNDEFINED
+                }
+            }
         }
 
-        val releaseCell = document.selectFirst("tr.year > td.value")!!
-        var cellTextContainingDate = releaseCell.select("span[itemprop=startDate]").attr("content").trim()
+        // date published
+        val datePublished = data.stringOrDefault("datePublished")
 
-        if (cellTextContainingDate.isBlank()) {
-            cellTextContainingDate = releaseCell.select("span[itemprop=datePublished]").attr("content").trim()
-        }
+        if (datePublished.isNotBlank() && (year == 0 || season == UNDEFINED)) {
+            val datePublishedMatch = DATEFORMAT.find(datePublished)!!
+            val date = LocalDate.of(
+                datePublishedMatch.groups["year"]!!.value.toInt(),
+                datePublishedMatch.groups["month"]!!.value.toInt(),
+                datePublishedMatch.groups["day"]!!.value.toInt(),
+            )
 
-        if (cellTextContainingDate.isBlank()) {
-            return AnimeSeason(UNDEFINED)
-        }
+            if (year == 0) {
+                year = date.year
+            }
 
-        val startDateMatch = DATEFORMAT.find(cellTextContainingDate)!!
-        val date = LocalDate.of(
-            startDateMatch.groups["year"]!!.value.toInt(),
-            startDateMatch.groups["month"]!!.value.toInt(),
-            startDateMatch.groups["day"]!!.value.toInt(),
-        )
-
-        val season = when(date.month.value) {
-            1, 2, 3 -> WINTER
-            4, 5, 6 -> SPRING
-            7, 8, 9 -> SUMMER
-            10, 11, 12 -> FALL
-            else -> UNDEFINED
+            if (season == UNDEFINED) {
+                season = when(date.month.value) {
+                    1, 2, 3 -> WINTER
+                    4, 5, 6 -> SPRING
+                    7, 8, 9 -> SUMMER
+                    10, 11, 12 -> FALL
+                    else -> UNDEFINED
+                }
+            }
         }
 
         return AnimeSeason(
             season = season,
-            year = date.year,
+            year = year,
         )
     }
 
-    private fun extractTags(document: Document): List<Tag> = document.select("span[itemprop=genre]").map { it.text() }
+    private fun extractTags(data: ExtractionResult): HashSet<Tag> {
+        return if (data.notFound("tags")) {
+            hashSetOf()
+        } else {
+            data.listNotNull<Tag>("tags").toHashSet()
+        }
+    }
 
     private companion object {
-        private val NO_PIC = URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png")
         private const val EU_CDN = "https://cdn-eu.anidb.net"
         private const val US_CDN = "https://cdn-us.anidb.net"
         private const val CDN = "https://cdn.anidb.net"

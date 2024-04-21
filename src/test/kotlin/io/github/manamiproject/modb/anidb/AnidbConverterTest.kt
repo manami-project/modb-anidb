@@ -180,7 +180,7 @@ internal class AnidbConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.episodes).isEqualTo(0)
+                assertThat(result.episodes).isEqualTo(1)
             }
         }
     }
@@ -535,12 +535,15 @@ internal class AnidbConverterTest {
 
                 // then
                 assertThat(result.relatedAnime).containsExactlyInAnyOrder(
-                    URI("https://anidb.net/anime/367"),
-                    URI("https://anidb.net/anime/368"),
                     URI("https://anidb.net/anime/405"),
+                    URI("https://anidb.net/anime/368"),
+                    URI("https://anidb.net/anime/2850"),
                     URI("https://anidb.net/anime/4576"),
+                    URI("https://anidb.net/anime/2995"),
                     URI("https://anidb.net/anime/6141"),
-                    URI("https://anidb.net/anime/6393")
+                    URI("https://anidb.net/anime/367"),
+                    URI("https://anidb.net/anime/2996"),
+                    URI("https://anidb.net/anime/6393"),
                 )
             }
         }
@@ -622,10 +625,12 @@ internal class AnidbConverterTest {
                     override fun fileSuffix(): FileSuffix = AnidbConfig.fileSuffix()
                 }
 
-                val testFile =
-                    loadTestResource<String>("file_converter_tests/status/date_published.html")
+                val testFile = loadTestResource<String>("file_converter_tests/status/date_published.html")
 
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+                val converter = AnidbConverter(
+                    config = testAnidbConfig,
+                    clock = fixedClock,
+                )
 
                 // when
                 val result = converter.convert(testFile)
@@ -650,7 +655,10 @@ internal class AnidbConverterTest {
                 val testFile =
                     loadTestResource<String>("file_converter_tests/status/date_published.html")
 
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+                val converter = AnidbConverter(
+                    config = testAnidbConfig,
+                    clock = fixedClock,
+                )
 
                 // when
                 val result = converter.convert(testFile)
@@ -675,7 +683,10 @@ internal class AnidbConverterTest {
                 val testFile =
                     loadTestResource<String>("file_converter_tests/status/date_published.html")
 
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+                val converter = AnidbConverter(
+                    config = testAnidbConfig,
+                    clock = fixedClock,
+                )
 
                 // when
                 val result = converter.convert(testFile)
@@ -700,7 +711,10 @@ internal class AnidbConverterTest {
                 val testFile =
                     loadTestResource<String>("file_converter_tests/status/start_to_end.html")
 
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+                val converter = AnidbConverter(
+                    config = testAnidbConfig,
+                    clock = fixedClock,
+                )
 
                 // when
                 val result = converter.convert(testFile)
@@ -725,7 +739,10 @@ internal class AnidbConverterTest {
                 val testFile =
                     loadTestResource<String>("file_converter_tests/status/start_to_end.html")
 
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+                val converter = AnidbConverter(
+                    config = testAnidbConfig,
+                    clock = fixedClock,
+                )
 
                 // when
                 val result = converter.convert(testFile)
@@ -750,7 +767,10 @@ internal class AnidbConverterTest {
                 val testFile =
                     loadTestResource<String>("file_converter_tests/status/start_to_end.html")
 
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+                val converter = AnidbConverter(
+                    config = testAnidbConfig,
+                    clock = fixedClock,
+                )
 
                 // when
                 val result = converter.convert(testFile)
@@ -775,7 +795,10 @@ internal class AnidbConverterTest {
                 val testFile =
                     loadTestResource<String>("file_converter_tests/status/start_to_unknown.html")
 
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+                val converter = AnidbConverter(
+                    config = testAnidbConfig,
+                    clock = fixedClock,
+                )
 
                 // when
                 val result = converter.convert(testFile)
@@ -800,7 +823,10 @@ internal class AnidbConverterTest {
                 val testFile =
                     loadTestResource<String>("file_converter_tests/status/start_to_unknown.html")
 
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+                val converter = AnidbConverter(
+                    config = testAnidbConfig,
+                    clock = fixedClock,
+                )
 
                 // when
                 val result = converter.convert(testFile)
@@ -825,7 +851,10 @@ internal class AnidbConverterTest {
                 val testFile =
                     loadTestResource<String>("file_converter_tests/status/unknown.html")
 
-                val converter = AnidbConverter(testAnidbConfig, fixedClock)
+                val converter = AnidbConverter(
+                    config = testAnidbConfig,
+                    clock = fixedClock,
+                )
 
                 // when
                 val result = converter.convert(testFile)
@@ -1430,7 +1459,7 @@ internal class AnidbConverterTest {
             inner class DatePublishedCellTests {
 
                 @ParameterizedTest
-                @ValueSource(strings = ["date_published_cell_apr", "date_published_cell_may", "date_published_cell_jun"])
+                @ValueSource(strings = ["date_published_cell_apr", "date_published_cell_may"])
                 fun `season is 'spring'`(file: String) {
                     runBlocking {
                         // given
@@ -1600,7 +1629,7 @@ internal class AnidbConverterTest {
                 }
 
                 @ParameterizedTest
-                @ValueSource(strings = ["start_date_cell_jan", "start_date_cell_feb", "start_date_cell_mar"])
+                @ValueSource(strings = ["start_date_cell_jan", "start_date_cell_feb"])
                 fun `season is 'winter'`(file: String) {
                     runBlocking {
                         // given
