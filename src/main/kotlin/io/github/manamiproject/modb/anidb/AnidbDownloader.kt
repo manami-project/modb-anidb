@@ -5,6 +5,7 @@ import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_NETWORK
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
@@ -26,7 +27,7 @@ public class AnidbDownloader(
 
         val response = httpClient.get(config.buildDataDownloadLink(id).toURL())
 
-        check(response.bodyAsText.isNotBlank()) { "Response body was blank for [anidbId=$id] with response code [${response.code}]" }
+        check(response.bodyAsText.neitherNullNorBlank()) { "Response body was blank for [anidbId=$id] with response code [${response.code}]" }
 
         val responseChecker = AnidbResponseChecker(response.bodyAsText).apply {
             checkIfCrawlerIsDetected()

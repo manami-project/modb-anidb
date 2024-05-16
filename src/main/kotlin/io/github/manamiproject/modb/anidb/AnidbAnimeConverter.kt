@@ -4,6 +4,9 @@ import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.eitherNullOrBlank
+import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
+import io.github.manamiproject.modb.core.extensions.remove
 import io.github.manamiproject.modb.core.extractor.DataExtractor
 import io.github.manamiproject.modb.core.extractor.ExtractionResult
 import io.github.manamiproject.modb.core.extractor.XmlDataExtractor
@@ -77,14 +80,14 @@ public class AnidbAnimeConverter(
         )
     }
 
-    private fun extractTitle(data: ExtractionResult) = data.string("title").replace("Anime: ", EMPTY)
+    private fun extractTitle(data: ExtractionResult) = data.string("title").remove("Anime: ")
 
     private fun extractEpisodes(data: ExtractionResult): Int {
         val episodeString = data.stringOrDefault("episodesString").ifBlank {
             data.stringOrDefault("episodesTypeCell")
         }
 
-        return if (episodeString.isBlank() || episodeString.contains("unknown number of episodes")) {
+        return if (episodeString.eitherNullOrBlank() || episodeString.contains("unknown number of episodes")) {
             1
         } else {
             episodeString.toIntOrNull() ?: 1
@@ -115,7 +118,7 @@ public class AnidbAnimeConverter(
     private fun extractPicture(data: ExtractionResult): URI {
         val src = data.stringOrDefault("image")
 
-        return if (src.isNotBlank()) {
+        return if (src.neitherNullNorBlank()) {
             val uri = when {
                 src.startsWith(EU_CDN) -> src.replace(EU_CDN, CDN)
                 src.startsWith(US_CDN) -> src.replace(US_CDN, CDN)
@@ -159,7 +162,7 @@ public class AnidbAnimeConverter(
     private fun extractSourcesEntry(data: ExtractionResult): HashSet<URI> {
         val id = data.listNotNull<String>("source").first().trim()
 
-        check(id.isNotBlank()) { "Sources link must not be blank" }
+        check(id.neitherNullNorBlank()) { "Sources link must not be blank" }
 
         return hashSetOf(config.buildAnimeLink(id))
     }
@@ -172,7 +175,7 @@ public class AnidbAnimeConverter(
         return data.listNotNull<String>("relatedAnime")
             .asSequence()
             .filterNot { it.contains("relation") }
-            .map { it.replace("/anime/", EMPTY) }
+            .map { it.remove("/anime/") }
             .distinct()
             .map { config.buildAnimeLink(it) }
             .toHashSet()
@@ -183,7 +186,7 @@ public class AnidbAnimeConverter(
         val endDateAttr = data.stringOrDefault("endDateAttr")
         val isTimePeriod = data.stringOrDefault("isTimePeriod").contains("until")
 
-        if (isTimePeriod && startDateAttr.isNotBlank()) {
+        if (isTimePeriod && startDateAttr.neitherNullNorBlank()) {
             val startDateMatch = DATEFORMAT.find(startDateAttr)!!
             val startDate = LocalDate.of(
                 startDateMatch.groups["year"]!!.value.toInt(),
@@ -191,7 +194,7 @@ public class AnidbAnimeConverter(
                 startDateMatch.groups["day"]!!.value.toInt(),
             )
 
-            val endDate = if (endDateAttr.isNotBlank()) {
+            val endDate = if (endDateAttr.neitherNullNorBlank()) {
                 val endDateMatch = DATEFORMAT.find(endDateAttr)!!
                 LocalDate.of(
                     endDateMatch.groups["year"]!!.value.toInt(),
@@ -206,7 +209,7 @@ public class AnidbAnimeConverter(
         }
 
         val datePublishedAttr = data.stringOrDefault("datePublishedAttr").trim()
-        val isDatePublished = datePublishedAttr.isNotBlank()
+        val isDatePublished = datePublishedAttr.neitherNullNorBlank()
 
         if (isDatePublished) {
             val startDateMatch = DATEFORMAT.find(datePublishedAttr)!!
@@ -244,7 +247,7 @@ public class AnidbAnimeConverter(
 
         val duration = data.listNotNull<String>("duration")
             .firstOrNull()
-            ?.replace("m", EMPTY)
+            ?.remove("m")
             ?.toIntOrNull() ?: 0
 
         return Duration(duration, MINUTES)
@@ -255,7 +258,7 @@ public class AnidbAnimeConverter(
         var year = 0
         var season = AnimeSeason.Season.UNDEFINED
 
-        if (seasonCell.isNotBlank()) {
+        if (seasonCell.neitherNullNorBlank()) {
             val seasonNameFormat = Regex("[aA-zZ]+")
             season = when (seasonNameFormat.find(seasonCell)?.value?.lowercase() ?: EMPTY) {
                 "winter" -> WINTER
@@ -278,7 +281,7 @@ public class AnidbAnimeConverter(
         // startDate
         val startDate = data.stringOrDefault("startDate")
 
-        if (startDate.isNotBlank() && (year == 0 || season == UNDEFINED)) {
+        if (startDate.neitherNullNorBlank() && (year == 0 || season == UNDEFINED)) {
             val startDateMatch = DATEFORMAT.find(startDate)!!
             val date = LocalDate.of(
                 startDateMatch.groups["year"]!!.value.toInt(),
@@ -304,7 +307,7 @@ public class AnidbAnimeConverter(
         // date published
         val datePublished = data.stringOrDefault("datePublished")
 
-        if (datePublished.isNotBlank() && (year == 0 || season == UNDEFINED)) {
+        if (datePublished.neitherNullNorBlank() && (year == 0 || season == UNDEFINED)) {
             val datePublishedMatch = DATEFORMAT.find(datePublished)!!
             val date = LocalDate.of(
                 datePublishedMatch.groups["year"]!!.value.toInt(),
