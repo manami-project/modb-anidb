@@ -22,6 +22,8 @@ public class AnidbDownloader(
 ) : Downloader {
 
     override suspend fun download(id: AnimeId, onDeadEntry: suspend (AnimeId) -> Unit): String = withContext(LIMITED_NETWORK) {
+        log.debug { "Downloading [anidbId=$id]" }
+
         val response = httpClient.get(config.buildDataDownloadLink(id).toURL())
 
         check(response.bodyAsText.isNotBlank()) { "Response body was blank for [anidbId=$id] with response code [${response.code}]" }
