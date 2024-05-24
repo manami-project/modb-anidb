@@ -1,4 +1,4 @@
-![Build](https://github.com/manami-project/modb-anidb/actions/workflows/build.yml/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/manami-project/modb-anidb/badge.svg)](https://coveralls.io/github/manami-project/modb-anidb) ![jdk21](https://img.shields.io/badge/jdk-21-informational)
+[![Tests](https://github.com/manami-project/modb-anidb/actions/workflows/tests.yml/badge.svg)](https://github.com/manami-project/modb-anidb/actions/workflows/tests.yml) [![codecov](https://codecov.io/gh/manami-project/modb-anidb/graph/badge.svg?token=YA6S36O4BH)](https://codecov.io/gh/manami-project/modb-anidb) ![jdk21](https://img.shields.io/badge/jdk-21-informational)
 # modb-anidb
 _[modb](https://github.com/manami-project?tab=repositories&q=modb&type=source)_ stands for _**M**anami **O**ffline **D**ata**B**ase_. Repositories prefixed with this acronym are used to create the [manami-project/anime-offline-database](https://github.com/manami-project/anime-offline-database).
 
