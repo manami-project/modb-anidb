@@ -1,10 +1,15 @@
 package io.github.manamiproject.modb.anidb
 
+import io.github.manamiproject.modb.core.config.BooleanPropertyDelegate
+import io.github.manamiproject.modb.core.config.ConfigRegistry
+import io.github.manamiproject.modb.core.config.DefaultConfigRegistry
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
 import io.github.manamiproject.modb.core.extractor.DataExtractor
 import io.github.manamiproject.modb.core.extractor.XmlDataExtractor
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.awt.Desktop
+import java.net.URI
 
 /**
  * Thrown in case a the crawler has been detected.
@@ -19,7 +24,17 @@ public object CrawlerDetectedException : RuntimeException("Crawler has been dete
  * @since 2.1.0
  * @param response raw HTML
  */
-public class AnidbResponseChecker(response: String, extractor: DataExtractor = XmlDataExtractor) {
+public class AnidbResponseChecker(
+    response: String,
+    extractor: DataExtractor = XmlDataExtractor,
+    configRegistry: ConfigRegistry = DefaultConfigRegistry,
+) {
+
+    private val openBrowserOnCrawlerDetected: Boolean by BooleanPropertyDelegate(
+        namespace = "modb.anidb",
+        default = false,
+        configRegistry = configRegistry,
+    )
 
     private val data by lazy { runBlocking {
         extractor.extract(response, mapOf(
@@ -66,6 +81,9 @@ public class AnidbResponseChecker(response: String, extractor: DataExtractor = X
         val isNginxPage = data.stringOrDefault("title") == "403 Forbidden"
 
         if (isAntiLeechPage || isNginxPage) {
+            if (openBrowserOnCrawlerDetected) {
+                Desktop.getDesktop().browse(URI("https://${AnidbConfig.hostname()}"))
+            }
             throw CrawlerDetectedException
         }
     }
