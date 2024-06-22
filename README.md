@@ -8,6 +8,6 @@ Don't use this lib to crawl the website entirely. Instead check whether [manami-
 
 ## Configuration
 
-| parameter                               | type    | default | description                                                                                          |
-|-----------------------------------------|---------|---------|------------------------------------------------------------------------------------------------------|
-| modb.anidb.openBrowserOnCrawlerDetected | boolean | `false` | If set to `true` anidb.net is opened in the default browser in case of a `CrawlerDetectedException`. |
+| parameter                                 | type      | default | description                                                                                          |
+|-------------------------------------------|-----------|---------|------------------------------------------------------------------------------------------------------|
+| `modb.anidb.openBrowserOnCrawlerDetected` | `Boolean` | `false` | If set to `true` anidb.net is opened in the default browser in case of a `CrawlerDetectedException`. |
