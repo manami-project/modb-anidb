@@ -344,10 +344,16 @@ public class AnidbAnimeConverter(
         }
     }
 
-    private companion object {
+    public companion object {
         private const val EU_CDN = "https://cdn-eu.anidb.net"
         private const val US_CDN = "https://cdn-us.anidb.net"
         private const val CDN = "https://cdn.anidb.net"
         private val DATEFORMAT = Regex("(?<year>\\d{4})-(?<month>\\d{2})-(?<day>\\d{2})")
+
+        /**
+         * Singleton of [AnidbAnimeConverter]
+         * @since 5.2.0
+         */
+        public val instance: AnidbAnimeConverter by lazy { AnidbAnimeConverter() }
     }
 }

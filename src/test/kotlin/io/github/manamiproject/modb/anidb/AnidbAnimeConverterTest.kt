@@ -1676,4 +1676,21 @@ internal class AnidbAnimeConverterTest {
             }
         }
     }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = AnidbAnimeConverter.instance
+
+            // when
+            val result = AnidbAnimeConverter.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(AnidbAnimeConverter::class.java)
+            assertThat(result===previous).isTrue()
+        }
+    }
 }
