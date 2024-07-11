@@ -27,7 +27,7 @@ public object CrawlerDetectedException : RuntimeException("Crawler has been dete
 public class AnidbResponseChecker(
     response: String,
     extractor: DataExtractor = XmlDataExtractor,
-    configRegistry: ConfigRegistry = DefaultConfigRegistry,
+    configRegistry: ConfigRegistry = DefaultConfigRegistry.instance,
 ) {
 
     private val openBrowserOnCrawlerDetected: Boolean by BooleanPropertyDelegate(
