@@ -14,18 +14,18 @@ import kotlinx.coroutines.withContext
 /**
  * Downloads anime data from anidb.net
  * @since 1.0.0
- * @param config Configuration for downloading data.
+ * @param metaDataProviderConfig Configuration for downloading data.
  * @param httpClient To actually download the anime data.
  */
 public class AnidbDownloader(
-    private val config: MetaDataProviderConfig,
-    private val httpClient: HttpClient = DefaultHttpClient(isTestContext = config.isTestContext()),
+    private val metaDataProviderConfig: MetaDataProviderConfig = AnidbConfig,
+    private val httpClient: HttpClient = DefaultHttpClient(isTestContext = metaDataProviderConfig.isTestContext()),
 ) : Downloader {
 
     override suspend fun download(id: AnimeId, onDeadEntry: suspend (AnimeId) -> Unit): String = withContext(LIMITED_NETWORK) {
         log.debug { "Downloading [anidbId=$id]" }
 
-        val response = httpClient.get(config.buildDataDownloadLink(id).toURL())
+        val response = httpClient.get(metaDataProviderConfig.buildDataDownloadLink(id).toURL())
 
         check(response.bodyAsText.neitherNullNorBlank()) { "Response body was blank for [anidbId=$id] with response code [${response.code}]" }
 
@@ -46,7 +46,13 @@ public class AnidbDownloader(
         }
     }
 
-    private companion object {
+    public companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [AnidbDownloader]
+         * @since 1.0.0
+         */
+        public val instance: AnidbDownloader by lazy { AnidbDownloader() }
     }
 }

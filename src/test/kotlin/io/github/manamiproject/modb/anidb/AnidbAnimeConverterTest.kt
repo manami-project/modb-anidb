@@ -628,7 +628,7 @@ internal class AnidbAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/status/date_published.html")
 
                 val converter = AnidbAnimeConverter(
-                    config = testAnidbConfig,
+                    metaDataProviderConfig = testAnidbConfig,
                     clock = fixedClock,
                 )
 
@@ -656,7 +656,7 @@ internal class AnidbAnimeConverterTest {
                     loadTestResource<String>("file_converter_tests/status/date_published.html")
 
                 val converter = AnidbAnimeConverter(
-                    config = testAnidbConfig,
+                    metaDataProviderConfig = testAnidbConfig,
                     clock = fixedClock,
                 )
 
@@ -684,7 +684,7 @@ internal class AnidbAnimeConverterTest {
                     loadTestResource<String>("file_converter_tests/status/date_published.html")
 
                 val converter = AnidbAnimeConverter(
-                    config = testAnidbConfig,
+                    metaDataProviderConfig = testAnidbConfig,
                     clock = fixedClock,
                 )
 
@@ -712,7 +712,7 @@ internal class AnidbAnimeConverterTest {
                     loadTestResource<String>("file_converter_tests/status/start_to_end.html")
 
                 val converter = AnidbAnimeConverter(
-                    config = testAnidbConfig,
+                    metaDataProviderConfig = testAnidbConfig,
                     clock = fixedClock,
                 )
 
@@ -740,7 +740,7 @@ internal class AnidbAnimeConverterTest {
                     loadTestResource<String>("file_converter_tests/status/start_to_end.html")
 
                 val converter = AnidbAnimeConverter(
-                    config = testAnidbConfig,
+                    metaDataProviderConfig = testAnidbConfig,
                     clock = fixedClock,
                 )
 
@@ -768,7 +768,7 @@ internal class AnidbAnimeConverterTest {
                     loadTestResource<String>("file_converter_tests/status/start_to_end.html")
 
                 val converter = AnidbAnimeConverter(
-                    config = testAnidbConfig,
+                    metaDataProviderConfig = testAnidbConfig,
                     clock = fixedClock,
                 )
 
@@ -796,7 +796,7 @@ internal class AnidbAnimeConverterTest {
                     loadTestResource<String>("file_converter_tests/status/start_to_unknown.html")
 
                 val converter = AnidbAnimeConverter(
-                    config = testAnidbConfig,
+                    metaDataProviderConfig = testAnidbConfig,
                     clock = fixedClock,
                 )
 
@@ -824,7 +824,7 @@ internal class AnidbAnimeConverterTest {
                     loadTestResource<String>("file_converter_tests/status/start_to_unknown.html")
 
                 val converter = AnidbAnimeConverter(
-                    config = testAnidbConfig,
+                    metaDataProviderConfig = testAnidbConfig,
                     clock = fixedClock,
                 )
 
@@ -852,7 +852,7 @@ internal class AnidbAnimeConverterTest {
                     loadTestResource<String>("file_converter_tests/status/unknown.html")
 
                 val converter = AnidbAnimeConverter(
-                    config = testAnidbConfig,
+                    metaDataProviderConfig = testAnidbConfig,
                     clock = fixedClock,
                 )
 

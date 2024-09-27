@@ -28,11 +28,11 @@ import java.time.LocalDate
 /**
  * Converts raw data to an [Anime]
  * @since 1.0.0
- * @param config Configuration for converting data.
+ * @param metaDataProviderConfig Configuration for converting data.
  * @param clock Used to determine the current date. **Default:** `Clock.systemDefaultZone()`
  */
 public class AnidbAnimeConverter(
-    private val config: MetaDataProviderConfig = AnidbConfig,
+    private val metaDataProviderConfig: MetaDataProviderConfig = AnidbConfig,
     private val extractor: DataExtractor = XmlDataExtractor,
     clock: Clock = Clock.systemDefaultZone(),
 ) : AnimeConverter {
@@ -164,7 +164,7 @@ public class AnidbAnimeConverter(
 
         check(id.neitherNullNorBlank()) { "Sources link must not be blank" }
 
-        return hashSetOf(config.buildAnimeLink(id))
+        return hashSetOf(metaDataProviderConfig.buildAnimeLink(id))
     }
 
     private fun extractRelatedAnime(data: ExtractionResult): HashSet<URI> {
@@ -177,7 +177,7 @@ public class AnidbAnimeConverter(
             .filterNot { it.contains("relation") }
             .map { it.remove("/anime/") }
             .distinct()
-            .map { config.buildAnimeLink(it) }
+            .map { metaDataProviderConfig.buildAnimeLink(it) }
             .toHashSet()
     }
 
